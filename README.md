@@ -23,6 +23,7 @@ Es una app web de un solo archivo: `index.html` y sus imágenes y videos están 
 | `sel-<personaje>-*.mp4` | Celebración al elegir a cada personaje |
 | `menu-<personaje>-*.mp4`, `mundo-<personaje>*.jpg` | Menú animado de actividades de cada personaje |
 | `col-<personaje>-*.jpg`, `globo-*.webp` | Juego Globos de colores |
+| `num-lala-*.jpg` | Escena de Números de Lala (nube para trazar y contar) |
 | `btn-*.webp`, `cara-*.webp`, `logo.webp` | Botones, caras de los personajes y logo |
 | `menu-*`, `mundo.*`, `puzzle-*`, `colores.jpg` | Escenas usadas en rompecabezas y pantallas anteriores |
 

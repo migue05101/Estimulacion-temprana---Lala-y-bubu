@@ -740,6 +740,35 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
 @keyframes gpop{40%{transform:translateX(-50%) scale(1.25)}100%{transform:translateX(-50%) scale(0);opacity:0}}
 @keyframes gwiggle{20%{transform:translateX(-50%) rotate(-9deg)}40%{transform:translateX(-50%) rotate(9deg)}60%{transform:translateX(-50%) rotate(-5deg)}80%{transform:translateX(-50%) rotate(4deg)}}
 .scene .sticker{z-index:5}
+/* Números en escena propia (Lala): el tablero nube de la imagen */
+.num-board{position:absolute;left:var(--nx,50%);top:var(--ny,12%);width:var(--nw,43%);height:var(--nh,74%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:1.6cqh;padding:1cqh 0;container-type:size;z-index:2}
+.num-title{margin:0;font-family:'Baloo 2',var(--f-display);font-weight:800;line-height:1;text-align:center;color:var(--t-main,#E85A9B);font-size:clamp(22px,12cqh,72px);
+  -webkit-text-stroke:6px #fff;paint-order:stroke fill;letter-spacing:.3px;
+  text-shadow:0 4px 0 color-mix(in srgb,var(--t-main,#E85A9B) 55%,#000),0 6px 0 rgba(255,255,255,.9),0 9px 12px rgba(90,50,10,.25);
+  animation:catBob 3.2s ease-in-out infinite;transform-origin:50% 80%}
+.num-title .ce{-webkit-text-stroke:0;text-shadow:0 3px 3px rgba(0,0,0,.2);display:inline-block;animation:catIcon 3.2s ease-in-out infinite}
+#play .num-title{font-size:clamp(24px,7vw,40px)}
+.num-board .trace{flex:1 1 0;min-height:0;height:0;width:100%;max-width:none}
+.num-board .chips{gap:2cqw;flex-wrap:nowrap}
+.num-board .chip{width:clamp(30px,10cqh,58px);height:clamp(30px,10cqh,58px);font-size:clamp(18px,6.5cqh,32px);border-radius:30%;box-shadow:0 3px 0 rgba(0,0,0,.1)}
+.num-board .chip:not(.on){background:#fff}
+#numZone{--zc:var(--t-main,#E85A9B)}
+#numZone.land .scene-bubble{margin-inline:0 auto;max-width:min(420px,40vw)}
+/* contar: hay más objetos de los que se piden; se ponen solo los indicados en la canasta */
+.cfield{flex:1;min-height:0;width:100%;display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:1.5cqh 2.5cqw}
+.citem{font-size:clamp(38px,min(17cqw,14cqh),100px);line-height:1;width:1.3em;height:1.3em;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 50% 40%,#fff,color-mix(in srgb,var(--zc) 14%,#fff));box-shadow:0 4px 0 color-mix(in srgb,var(--zc) 30%,#fff);transform:rotate(var(--r,0deg));animation:citemIn .45s cubic-bezier(.3,1.6,.5,1) backwards;animation-delay:var(--d,0s);transition:opacity .2s,transform .2s}
+.citem.gone{opacity:0;transform:scale(.3);pointer-events:none}
+@keyframes citemIn{from{transform:scale(.2) rotate(0);opacity:0}}
+.cbasket{position:relative;width:min(100%,92cqw);min-height:clamp(54px,19cqh,130px);display:flex;align-items:center;gap:2cqw;padding:1cqh 3cqw;border-radius:999px;background:color-mix(in srgb,var(--zc) 16%,#fff);box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--zc) 35%,#fff)}
+.cb-e{font-size:clamp(36px,14cqh,86px);line-height:1;flex:none;filter:drop-shadow(0 3px 2px rgba(0,0,0,.15))}
+.cb-in{flex:1;display:flex;flex-wrap:wrap;gap:1cqw;align-items:center;min-height:1em}
+.cb-in button{font-size:clamp(26px,8.5cqh,52px);line-height:1;animation:citemIn .35s cubic-bezier(.3,1.6,.5,1)}
+.cb-n{font-family:var(--f-display);font-weight:800;font-size:clamp(24px,10cqh,60px);color:var(--zc);min-width:1em;text-align:center}
+.cbasket.shake{animation:gwiggleB .5s}
+@keyframes gwiggleB{25%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}75%{transform:rotate(-2deg)}}
+.cdone{font-size:clamp(18px,7cqh,30px);padding:.35em 1.1em;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+.cdone[hidden]{display:none}
 .moon-btn{position:absolute;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);width:58px;height:58px;border-radius:50%;background:var(--night);box-shadow:0 0 0 3px rgba(255,255,255,.8),0 6px 14px rgba(0,0,0,.3);display:grid;place-items:center}
 .moon-btn svg{width:30px;height:30px}
 .skip{position:absolute;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);background:rgba(43,50,71,.6);color:#fff;font-weight:700;font-size:14px;border-radius:999px;padding:10px 18px;backdrop-filter:blur(6px)}
@@ -851,6 +880,20 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
     <div class="world-hud scene-hud">
       <button class="round-btn" data-back aria-label="Volver al mundo"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="bubble scene-bubble" id="colorBubble" title="Tocar para repetir"></div>
+      <div class="stars"><svg viewBox="0 0 24 24"><path fill="var(--honey)" d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg><span class="starCount">0</span></div>
+    </div>
+  </section>
+
+  <!-- ZONA NÚMEROS (escena propia de Lala) -->
+  <section class="screen scene" id="numZone" hidden>
+    <div class="world-bg" id="numBlur"></div>
+    <div class="world-box" id="numBox">
+      <img class="still" id="numImg" alt="">
+      <div class="num-board" id="numPlay"></div>
+    </div>
+    <div class="world-hud scene-hud">
+      <button class="round-btn" data-back aria-label="Volver al mundo"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="var(--ink)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="bubble scene-bubble" id="numBubble" title="Tocar para repetir"></div>
       <div class="stars"><svg viewBox="0 0 24 24"><path fill="var(--honey)" d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg><span class="starCount">0</span></div>
     </div>
   </section>
@@ -1091,7 +1134,7 @@ function celebrate(zone, text, onNext, nextLabel='¡Otra vez!', host=play){
 /* ---------- navegación ---------- */
 const ZONES = [
   {id:'colores', name:'Colores', guide:'lala', color:'var(--z-colores)', hint:'aprende los colores', start:startColores, scene:'#colorZone'},
-  {id:'numeros', name:'Números', guide:'juan', color:'var(--z-numeros)', hint:'traza y cuenta', start:startNumeros},
+  {id:'numeros', name:'Números', guide:'juan', color:'var(--z-numeros)', hint:'traza y cuenta', start:startNumeros, scene:() => THEME_IDS[THI]==='lala' ? '#numZone' : null},
   {id:'familia', name:'Mi familia', guide:'lucia', color:'var(--z-familia)', hint:'reconoce a tu familia', start:startFamilia},
   {id:'dientes', name:'Dientes', guide:'bubu', color:'var(--z-dientes)', hint:'cepíllate los dientes', start:startDientes},
   {id:'comida', name:'Comida', guide:'lala', color:'var(--z-comida)', hint:'come sano', start:startComida},
@@ -1261,6 +1304,17 @@ function layoutColor(){
   box.dataset.lefts = [1,3,5].map(k => (B[0] + B[2]*k/6).toFixed(1)).join(',');
   box.querySelectorAll('.gballoon').forEach((b,i) => b.style.left = box.dataset.lefts.split(',')[i]+'%');
 }
+// Números (Lala): imagen con la nube; NUM_BOARD = zona útil dentro de la nube [x, y, ancho, alto] en %
+const NUM_BOARD = { h:[50.8, 12.8, 42.2, 73.6], v:[7.4, 50.8, 85.2, 45] };
+function layoutNum(){
+  const box = $('#numBox'); if (!box) return;
+  const land = innerWidth/innerHeight >= 1, src = `num-lala-${land ? 'h' : 'v'}.jpg`;
+  if ($('#numImg').getAttribute('src') !== src){ $('#numImg').src = src; $('#numBlur').style.backgroundImage = `url(${src})`; }
+  fitBox(box, land ? 1672/941 : 941/1672);
+  const B = NUM_BOARD[land ? 'h' : 'v'];
+  ['--nx','--ny','--nw','--nh'].forEach((k,i) => box.style.setProperty(k, B[i]+'%'));
+  $('#numZone').classList.toggle('land', land);
+}
 function layoutWorld(){
   const mode = innerWidth/innerHeight >= 1 ? 'h' : 'v', W = WORLD[mode], vid = $('#worldVid');
   if (mode !== worldMode){
@@ -1275,7 +1329,7 @@ function layoutWorld(){
     });
   }
   fitBox($('#worldBox'), W.ar);
-  layoutColor();
+  layoutColor(); layoutNum();
 }
 layoutWorld(); addEventListener('resize', layoutWorld);
 const W2_LAND = {"lala": [66.87, 8.08, 7.18, 4.36], "lucia": [68.24, 7.01, 5.02, 4.89], "juan": [68.48, 8.29, 6.16, 5.1], "bubu": [69.8, 7.23, 5.56, 5.1]};
@@ -1325,9 +1379,10 @@ function openZone(id){
   const z = ZONES.find(x=>x.id===id); sfx.tick();
   if (cleanup) { cleanup(); cleanup = null; }
   $('#home2').hidden = true; $('#w2Vid').pause();
-  if (z.scene){
+  const sc = typeof z.scene === 'function' ? z.scene() : z.scene;
+  if (sc){
     $('#home').hidden = true; $('#worldVid').pause();
-    $(z.scene).hidden = false; bubbleEl = $(z.scene).querySelector('.scene-bubble');
+    $(sc).hidden = false; bubbleEl = $(sc).querySelector('.scene-bubble');
     z.start(); return;
   }
   $('#home').hidden = true; $('#zone').hidden = false; $('#worldVid').pause();
@@ -1422,16 +1477,24 @@ const DIGITS = {
   5:['M72 42 L64 118 C96 94 154 108 152 164 C150 224 82 234 54 200','M72 42 L146 42']
 };
 const COUNT_THINGS = ['🍎','🐥','⭐','🎈','🐟'];
+// dónde se guardan los objetos al contar, según el personaje
+const CESTA = { lala:{e:'🧺',n:'la canasta'}, juan:{e:'🎒',n:'la mochila'}, lucia:{e:'☁️',n:'la nube'}, bubu:{e:'🧺',n:'la canasta'} };
 function startNumeros(){
   let n = 1;
+  const scene = $('#numZone'), inScene = !scene.hidden, host = inScene ? $('#numPlay') : play;
+  if (inScene) layoutNum();
+  let timers = []; const later = (f, ms) => timers.push(setTimeout(f, ms));
+  cleanup = () => { timers.forEach(clearTimeout); timers = []; if (inScene){ host.innerHTML = ''; scene.querySelector('.sticker')?.remove(); } };
+  const cap = s => s[0].toUpperCase()+s.slice(1);
+  const numW = (k, g) => k === 1 ? (g === 'la' ? 'una' : 'un') : NUM_WORDS[k];
   function chips(){
     return `<div class="chips">${[1,2,3,4,5].map(i=>`<button class="chip ${i===n?'on':''} ${state.progress.numeros.includes(i)?'done':''}" data-i="${i}">${i}</button>`).join('')}</div>`;
   }
-  function bindChips(){ play.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ n=+c.dataset.i; trace(); }); }
+  function bindChips(){ host.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ timers.forEach(clearTimeout); timers = []; n=+c.dataset.i; trace(); }); }
   function trace(){
     const strokes = DIGITS[n];
-    play.innerHTML = chips() + `<svg class="trace" viewBox="0 0 200 260" id="tr" role="img" aria-label="Traza el número ${n}">
-      <g id="sil"></g><g id="guides"></g><g id="ink"></g><g id="marks"></g></svg>`;
+    host.innerHTML = `<h3 class="num-title">¡El ${n}!</h3><svg class="trace" viewBox="0 0 200 260" id="tr" role="img" aria-label="Traza el número ${n}">
+      <g id="sil"></g><g id="guides"></g><g id="ink"></g><g id="marks"></g></svg>` + chips();
     bindChips();
     const svg = $('#tr'), NS='http://www.w3.org/2000/svg';
     const mk = (tag, attrs, parent) => { const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); parent.appendChild(e); return e; };
@@ -1492,20 +1555,43 @@ function startNumeros(){
       { const [x,y]=fx.at(svg); fx.win(x,y); }
       if (!state.progress.numeros.includes(n)) state.progress.numeros.push(n); save();
       say(`¡Lo hiciste! ¡El ${NUM_WORDS[n]}! Ahora contemos.`);
-      setTimeout(count, 1700);
+      later(count, 1700);
     }
   }
+  // Contar: aparecen más objetos de los que se piden; el niño pone en la canasta solo los indicados, ni más ni menos.
   function count(){
-    const thing = (TH.pool[n-1] || TH.pool[0]).e; let c = 0;
-    play.innerHTML = chips() + `<div style="font-family:var(--f-display);font-size:min(30vw,170px);line-height:.9;color:var(--zc)">${n}</div>
-      <div class="count-row">${Array.from({length:n},(_,i)=>`<button class="count-item" data-i="${i}" aria-label="Contar">${thing}</button>`).join('')}</div>`;
+    const it = TH.pool[n-1] || TH.pool[0], g = it.g, C = CESTA[THEME_IDS[THI]] || CESTA.lala;
+    const total = Math.min(8, n + 2 + (Math.random() < .5 ? 1 : 0)), pron = g === 'la' ? 'una' : 'uno';
+    const what = `${numW(n, g)} ${n === 1 ? it.n : it.p}`;
+    host.innerHTML = `<h3 class="num-title">${n} <span class="ce">${it.e}</span></h3>
+      <div class="cfield">${Array.from({length:total},(_,i)=>`<button class="citem" data-i="${i}" aria-label="${it.n}" style="--r:${(Math.random()*16-8).toFixed(0)}deg;--d:${(i*.06).toFixed(2)}s">${it.e}</button>`).join('')}</div>
+      <div class="cbasket"><span class="cb-e">${C.e}</span><div class="cb-in"></div><b class="cb-n">0</b></div>
+      <button class="big-cta cdone" hidden>¡Listo!</button>` + chips();
     bindChips();
-    ask(n===1 ? 'Toca el dibujito y cuenta conmigo.' : `Toca cada dibujito y contamos hasta ${NUM_WORDS[n]}.`);
-    play.querySelectorAll('.count-item').forEach(b=>b.onclick=()=>{
-      if (b.classList.contains('counted')) return;
-      b.classList.add('counted'); c++; { const [x,y]=fx.at(b); fx.burst(x,y,{count:14,shape:['star','glow'],size:9,speed:5,twinkle:1}); } tone([440+c*90],.12,'triangle'); say(NUM_WORDS[c][0].toUpperCase()+NUM_WORDS[c].slice(1));
-      if (c===n) setTimeout(()=>celebrate('numeros', `¡${NUM_WORDS[n][0].toUpperCase()+NUM_WORDS[n].slice(1)}! ¡Muy bien!`, ()=>{ n = n<5 ? n+1 : 1; trace(); }, n<5?'Siguiente número':'Otra vez'), 700);
+    const inB = host.querySelector('.cb-in'), cnt = host.querySelector('.cb-n'), done = host.querySelector('.cdone'), bask = host.querySelector('.cbasket');
+    let picked = 0, over = false;
+    ask(`Pon ${what} en ${C.n}. ¡Ni más, ni menos!`);
+    const upd = () => { cnt.textContent = picked; done.hidden = picked === 0; };
+    host.querySelectorAll('.citem').forEach(b => b.onclick = () => {
+      if (over || b.classList.contains('gone')) return;
+      b.classList.add('gone'); picked++;
+      const [x,y] = fx.at(b); fx.burst(x, y, {count:12, shape:['star','glow'], size:9, speed:5, twinkle:1});
+      const m = document.createElement('button'); m.textContent = it.e; m.setAttribute('aria-label', 'Sacar'); inB.appendChild(m);
+      m.onclick = () => { if (over) return; m.remove(); b.classList.remove('gone'); picked--; upd(); sfx.soft(); say(picked ? cap(numW(picked, g)) : 'Cero'); };
+      tone([440 + picked*90], .12, 'triangle'); say(cap(numW(picked, g))); upd();
     });
+    done.onclick = () => {
+      if (over) return;
+      if (picked === n){
+        over = true; sfx.yes(); { const [x,y] = fx.at(bask); fx.win(x, y); }
+        if (!state.progress.numeros.includes(n)) state.progress.numeros.push(n); save();
+        later(() => celebrate('numeros', `¡${cap(what)}! ¡Muy bien!`, () => { n = n < 5 ? n+1 : 1; trace(); }, n < 5 ? 'Siguiente número' : 'Otra vez', inScene ? scene : play), 700);
+      } else {
+        bask.classList.remove('shake'); void bask.offsetWidth; bask.classList.add('shake'); sfx.soft();
+        if (picked < n) say(`Tienes ${numW(picked, g)}. Necesitamos ${numW(n, g)}. Pon ${n - picked === 1 ? pron : NUM_WORDS[n - picked]} más.`);
+        else say(`¡Son ${g === "la" ? "muchas" : "muchos"}! Necesitamos ${numW(n, g)}. Saca ${picked - n === 1 ? pron : NUM_WORDS[picked - n]}.`);
+      }
+    };
   }
   trace();
 }
