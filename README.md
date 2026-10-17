@@ -1,5 +1,9 @@
 # Estimulación temprana Lala y Bubu
 
+## ▶️ [Abrir la aplicación](https://migue05101.github.io/Estimulacion-temprana---Lala-y-bubu/)
+
+https://migue05101.github.io/Estimulacion-temprana---Lala-y-bubu/
+
 App de estimulación temprana para niños de 2 años en adelante, con los personajes de la serie **Lala y Bubu** (Lala, Juan, Lucía y Bubu) como guías. Funciona en celular, tablet y computador, en vertical y horizontal.
 
 ## Cómo abrirla
