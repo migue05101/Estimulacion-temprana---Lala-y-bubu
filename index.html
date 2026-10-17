@@ -716,7 +716,14 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
 @keyframes joyPulse{30%{transform:scale(1.025)}60%{transform:scale(.995)}}
 .col-joy{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 30%,rgba(255,245,190,.0),rgba(255,245,190,0) 70%);opacity:0;transition:opacity .4s}
 #colorBox.joy .col-joy{opacity:1;background:radial-gradient(circle at 50% 30%,rgba(255,240,170,.22),rgba(255,240,170,0) 60%)}
-.gballoon img{filter:drop-shadow(0 10px 10px rgba(80,50,20,.25))}
+.eater-big{font-size:clamp(90px,24vw,150px);line-height:1;animation:bob 3s ease-in-out infinite;filter:drop-shadow(0 6px 4px rgba(0,0,0,.18))}
+.mback{font-size:clamp(34px,10vw,58px);line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.mcard .b{background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--t-main,#A57BF0) 60%,#fff),var(--t-main,#6A3FC8))!important;box-shadow:inset 0 3px 0 rgba(255,255,255,.45),0 5px 0 color-mix(in srgb,var(--t-main,#6A3FC8) 60%,#000)!important}
+.cw .cemo{width:auto;font-size:clamp(40px,11vw,66px);line-height:1;left:50%;transform:translateX(-50%)}
+.breath{flex-direction:column;gap:2px;display:flex!important;align-items:center;justify-content:center}
+.bemo{font-size:clamp(40px,11vw,60px);line-height:1}
+.gballoon img,.gballoon .isvg{filter:drop-shadow(0 10px 10px rgba(80,50,20,.25))}
+.gballoon .isvg{width:100%;height:auto;display:block;pointer-events:none}
 .board-dots i{width:3.2cqw;height:3.2cqw;min-width:10px;min-height:10px;background:rgba(239,91,76,.22)}
 .board-dots i.on{background:var(--z-colores)}
 .world-box{container-type:size}
@@ -1139,7 +1146,7 @@ const THEMES = {
       {e:'🍓',n:'fresa',p:'fresas',g:'la'},{e:'🍎',n:'manzana',p:'manzanas',g:'la'},{e:'🌻',n:'girasol',p:'girasoles',g:'el'},{e:'🐌',n:'caracol',p:'caracoles',g:'el'},
       {e:'🐦',n:'pajarito',p:'pajaritos',g:'el'},{e:'🐛',n:'gusanito',p:'gusanitos',g:'el'},{e:'🍄',n:'hongo',p:'hongos',g:'el'},{e:'🌈',n:'arcoíris',p:'arcoíris',g:'el'}],
     riders:['🐝','🦋','🐞','🐌','🐦','🐛','🐰','🐱'],
-    titles:{colores:'Globos de colores', numeros:'Números del jardín', memoria:'Parejas de flores', quefalta:'¿Qué falta en el jardín?', burbujas:'Burbujas del jardín', sombras:'Sombras del jardín', pintar:'Pinta con Lala', xilofono:'Música con Lala', cocina:'Cocina con Lala', bus:'El bus del jardín'} },
+    titles:{colores:'Flores de colores', dientes:'Dientes del hipopótamo', comida:'Comida del conejito', vasitos:'Macetas escondidas', patitos:'Mariposas y flores', respira:'Respira con la flor', cocina:'Galletas con Lala', numeros:'Números del jardín', memoria:'Parejas de flores', quefalta:'¿Qué falta en el jardín?', burbujas:'Burbujas del jardín', sombras:'Sombras del jardín', pintar:'Pinta con Lala', xilofono:'Música con Lala', bus:'El bus del jardín'} },
   juan:{ name:'Juan', world:'La aventura de Juan', greet:'¡Hola! Soy Juan. ¡Vamos de aventura con los dinosaurios!',
     main:'#F07A1A', dark:'#8A3D05', bg:'linear-gradient(#BFE9FF,#E9F7D2 55%,#9CD67A)', frameA:'#8FCB5B', frameB:'#4E9A2E', corner:'#F59A23',
     motif:['🦖','🌴','🦕','🌋','🍃'], cards:['#F07A1A','#3BAA4C','#2F7DE1','#C0392B','#8E5B2B','#16A085'],
@@ -1147,7 +1154,7 @@ const THEMES = {
       {e:'🦒',n:'jirafa',p:'jirafas',g:'la'},{e:'🐒',n:'mono',p:'monos',g:'el'},{e:'🚂',n:'tren',p:'trenes',g:'el'},{e:'🚗',n:'carro',p:'carros',g:'el'},
       {e:'✈️',n:'avión',p:'aviones',g:'el'},{e:'🚀',n:'cohete',p:'cohetes',g:'el'},{e:'⚽',n:'pelota',p:'pelotas',g:'la'},{e:'🐢',n:'tortuga',p:'tortugas',g:'la'}],
     riders:['🦖','🐊','🦁','🐘','🦒','🐒','🐢','🐯'],
-    titles:{colores:'Globos de aventura', numeros:'Números de dinos', memoria:'Parejas de dinos', quefalta:'¿Qué falta en la selva?', burbujas:'Burbujas de aventura', sombras:'Sombras de la selva', bus:'El bus de la selva', bomberos:'Juan bombero', pintar:'Pinta con Juan', xilofono:'Música con Juan'} },
+    titles:{colores:'Mochilas de colores', dientes:'Dientes del dino', comida:'Comida del dino', vasitos:'Cofres del tesoro', patitos:'Carritos al garaje', cocina:'Panqueques de Juan', numeros:'Números de dinos', memoria:'Parejas de dinos', quefalta:'¿Qué falta en la selva?', burbujas:'Burbujas de aventura', sombras:'Sombras de la selva', bus:'El bus de la selva', bomberos:'Juan bombero', pintar:'Pinta con Juan', xilofono:'Música con Juan'} },
   lucia:{ name:'Lucía', world:'El cielo de Lucía', greet:'¡Hola! Soy Lucía. ¡Vamos a jugar entre las nubes y las estrellas!',
     main:'#8A5BE0', dark:'#4B2A8C', bg:'linear-gradient(#CFE4FF,#EBDDFF 60%,#FFE3F5)', frameA:'#C9B3FF', frameB:'#8F6AE6', corner:'#FFD84A',
     motif:['⭐','☁️','🌙','✨','🎈'], cards:['#8A5BE0','#2F7DE1','#E85A9B','#13A39A','#E09A00','#5B6CE0'],
@@ -1155,7 +1162,7 @@ const THEMES = {
       {e:'🎈',n:'globo',p:'globos',g:'el'},{e:'🎵',n:'nota musical',p:'notas musicales',g:'la'},{e:'🎀',n:'moño',p:'moños',g:'el'},{e:'🦄',n:'unicornio',p:'unicornios',g:'el'},
       {e:'🐱',n:'gatito',p:'gatitos',g:'el'},{e:'🍰',n:'pastel',p:'pasteles',g:'el'},{e:'🧁',n:'cupcake',p:'cupcakes',g:'el'},{e:'🐑',n:'ovejita',p:'ovejitas',g:'la'}],
     riders:['🦄','🐱','🐑','🐶','🐰','🐼','🐥','🐨'],
-    titles:{colores:'Globos del cielo', numeros:'Estrellas y números', memoria:'Parejas del cielo', quefalta:'¿Qué falta en el cielo?', burbujas:'Burbujas de estrellas', sombras:'Sombras del cielo', pintar:'Pinta con Lucía', xilofono:'Música con Lucía', cocina:'Pastelería de Lucía'} },
+    titles:{colores:'Estrellas de colores', dientes:'Dientes del unicornio', comida:'Comida del unicornio', vasitos:'Nubes mágicas', patitos:'Estrellitas a su nube', respira:'Respira con la nube', numeros:'Estrellas y números', memoria:'Parejas del cielo', quefalta:'¿Qué falta en el cielo?', burbujas:'Burbujas de estrellas', sombras:'Sombras del cielo', pintar:'Pinta con Lucía', xilofono:'Música con Lucía', cocina:'Pastelería de Lucía'} },
   bubu:{ name:'Bubu', world:'El bosque mágico de Bubu', greet:'¡Hola! Soy Bubu. ¡Vamos a mi bosque mágico!',
     main:'#2E8B4A', dark:'#174D28', bg:'linear-gradient(#D7F0C4,#F7EBC6 60%,#E9C48C)', frameA:'#C98F55', frameB:'#8A5A2B', corner:'#FFC93C',
     motif:['🌲','🍄','⭐','🍂','🌰'], cards:['#2E8B4A','#B5651D','#D99A00','#3C7FBF','#7A4FB5','#C0392B'],
@@ -1163,7 +1170,7 @@ const THEMES = {
       {e:'🐰',n:'conejo',p:'conejos',g:'el'},{e:'🦔',n:'erizo',p:'erizos',g:'el'},{e:'🍯',n:'tarro de miel',p:'tarros de miel',g:'el'},{e:'🌲',n:'pino',p:'pinos',g:'el'},
       {e:'🍄',n:'hongo',p:'hongos',g:'el'},{e:'🌰',n:'castaña',p:'castañas',g:'la'},{e:'🍂',n:'hoja',p:'hojas',g:'la'},{e:'🦌',n:'venado',p:'venados',g:'el'}],
     riders:['🐻','🐿️','🦊','🦉','🐰','🦔','🦌','🐺'],
-    titles:{colores:'Globos del bosque', numeros:'Números del bosque', memoria:'Parejas del bosque', quefalta:'¿Qué falta en el bosque?', burbujas:'Burbujas del bosque', sombras:'Sombras del bosque', pintar:'Pinta con Bubu', xilofono:'Música con Bubu', cocina:'Cocina de Bubu', bomberos:'Bubu bombero'} }
+    titles:{colores:'Globos del bosque', vasitos:'Vasitos de miel', cocina:'Cupcakes de Bubu', numeros:'Números del bosque', memoria:'Parejas del bosque', quefalta:'¿Qué falta en el bosque?', burbujas:'Burbujas del bosque', sombras:'Sombras del bosque', pintar:'Pinta con Bubu', xilofono:'Música con Bubu', bomberos:'Bubu bombero'} }
 };
 const THEME_IDS = ['lala','juan','lucia','bubu'];
 let TH = THEMES.lala, THI = 0;
@@ -1189,6 +1196,12 @@ let cleanup = null;
 const ZONE_FX = { colores:['#EF5B4C','#FF9A8F','#fff'], numeros:['#F59A23','#FFD166','#fff'], familia:['#E66FA3','#FF9AC4','#fff'], dientes:['#2FA7C9','#BFF0FF','#fff'], comida:['#43A75A','#9BD36A','#F7C531'] };
 // botones de dulce recortados de las imágenes del mundo; 'top' deja libre la decoración de la esquina
 const CAT_STYLE = {'Aprendo':['🌈','#E85A9B'],'Cuerpo y emociones':['💖','#F06A5E'],'Memoria y atención':['🧠','#9B59D6'],'Lógica y números':['🔢','#F08A1C'],'Motricidad fina':['✏️','#2F8FE0'],'Letras y palabras':['🔤','#13A39A'],'Arte y música':['🎨','#E0457B'],'Hábitos y juego':['🧸','#3BAA4C']};
+const ICONS_BY = {
+  lala:{colores:'🌸', dientes:'🦛', comida:'🐰', vasitos:'🪴', patitos:'🦋', cocina:'🍪', respira:'🌸', memoria:'🌸'},
+  juan:{colores:'🎒', dientes:'🦖', comida:'🦕', vasitos:'💎', patitos:'🚗', cocina:'🥞', memoria:'🧭'},
+  lucia:{colores:'⭐', dientes:'🦄', comida:'🦄', vasitos:'☁️', patitos:'⭐', cocina:'🎂', respira:'☁️'},
+  bubu:{colores:'🎈', vasitos:'🍯', cocina:'🧁', memoria:'🍃'}
+};
 const BTNS = [{n:'rosa',c:'#E85A9B',top:'24%'},{n:'naranja',c:'#F08A1C',top:'18%'},{n:'morado',c:'#9B59D6',top:'16%'},{n:'verde',c:'#3BAA4C',top:'20%'},{n:'azul',c:'#2F8FE0',top:'18%'}];
 function renderPortals(){
   // mundo del personaje elegido: todas las actividades, con los colores, nombres y caras de ese personaje
@@ -1198,7 +1211,7 @@ function renderPortals(){
   layoutW2();
   $('#gameGrid').innerHTML = CAT_ORDER.map((c,ci) => `<h3 class="cat-title" style="--cc:${CAT_STYLE[c][1]};--d:${-ci*.4}s"><span class="ce">${CAT_STYLE[c][0]}</span>${c}</h3>` + ZONES.filter(z => z.cat===c).map(z => {
     const B = BTNS[k++ % BTNS.length]; zoneColor[z.id] = B.c;
-    return `<button class="gcard" data-zone="${z.id}" aria-label="${zoneTitle(z)}" style="--top:${B.top}"><img class="bt" src="btn-${B.n}.webp" alt=""><span class="gc"><span class="gi">${z.icon}</span><span class="gt"><b>${zoneTitle(z)}</b><small>${zoneHint(z)}</small></span></span></button>`; }).join('')).join('');
+    return `<button class="gcard" data-zone="${z.id}" aria-label="${zoneTitle(z)}" style="--top:${B.top}"><img class="bt" src="btn-${B.n}.webp" alt=""><span class="gc"><span class="gi">${(ICONS_BY[THEME_IDS[THI]]||{})[z.id] || z.icon}</span><span class="gt"><b>${zoneTitle(z)}</b><small>${zoneHint(z)}</small></span></span></button>`; }).join('')).join('');
   $('#gameGrid').scrollTop = 0;
   document.querySelectorAll('.gcard').forEach(b => b.onclick = () => {
     if (b.classList.contains('tapped')) return;
@@ -1366,8 +1379,9 @@ function startColores(){
     let opts; do { opts = shuffle(COLORS).slice(0,3); } while (last && opts.some(o => o.n === last) && Math.random() < .7);
     const target = pick(opts); last = target.n;
     const L = (box.dataset.lefts || '25.5,50,74.5').split(',');
-    row.innerHTML = opts.map((o,i)=>`<button class="gballoon in" style="left:${L[i]}%;animation-delay:${i*.12}s,${.5+i*.12}s" data-n="${o.n}" aria-label="Globo ${o.n}"><img src="globo-${o.n}.webp" alt=""></button>`).join('');
-    ask(`Toca el globo ${target.n}.`);
+    const K = SK().colores, A = o => colorAdj(o.n, K.g), art = K.g, ese = K.g === 'la' ? 'Esa' : 'Ese';
+    row.innerHTML = opts.map((o,i)=>`<button class="gballoon in" style="left:${L[i]}%;animation-delay:${i*.12}s,${.5+i*.12}s" data-n="${o.n}" aria-label="${K.n} ${A(o)}">${itemHTML(K.draw, o.c, o.n)}</button>`).join('');
+    ask(`Toca ${art} ${K.n} ${A(target)}.`);
     let locked = false;
     row.querySelectorAll('.gballoon').forEach(b => b.onclick = () => {
       if (locked) return;
@@ -1378,11 +1392,11 @@ function startColores(){
         tone([1400,700],.06,'square',.08); sfx.yes();
         fx.burst(x, y, {count:46, colors:[target.c,target.c,'#fff'], shape:['confetti','glow'], size:13, speed:11, gravity:.22, life:65});
         fx.burst(x, y, {count:14, shape:'star', size:10, speed:6, twinkle:1});
-        say(`¡Sí! ¡${cap(target.n)}!`); paintDots();
+        say(`¡Sí! ¡${cap(A(target))}!`); paintDots();
         later(() => celebrateRound(round >= ROUNDS), 450);
       } else {
         b.classList.remove('no','in'); b.style.animationDelay = '0s'; void b.offsetWidth; b.classList.add('no'); sfx.soft();
-        say(`Ese es ${b.dataset.n}. Busca el ${target.n}.`);
+        say(`${ese} es ${colorAdj(b.dataset.n, K.g)}. Busca ${art} ${K.n} ${A(target)}.`);
       }
     });
   }
@@ -1482,7 +1496,7 @@ function startNumeros(){
     }
   }
   function count(){
-    const thing = COUNT_THINGS[n-1]; let c = 0;
+    const thing = (TH.pool[n-1] || TH.pool[0]).e; let c = 0;
     play.innerHTML = chips() + `<div style="font-family:var(--f-display);font-size:min(30vw,170px);line-height:.9;color:var(--zc)">${n}</div>
       <div class="count-row">${Array.from({length:n},(_,i)=>`<button class="count-item" data-i="${i}" aria-label="Contar">${thing}</button>`).join('')}</div>`;
     bindChips();
@@ -1542,8 +1556,9 @@ function startDientes(){
   const teethBot = [0,1,2,3,4,5].map(i=>({x:62+i*46, y:168, h:54}));
   const teeth = [...teethTop, ...teethBot].map(t=>({...t, dirt:1}));
   const germ = (x,y) => `<g transform="translate(${x} ${y})"><circle r="9" fill="#8BC34A"/><circle cx="-3" cy="-2" r="2" fill="#2B3247"/><circle cx="3" cy="-2" r="2" fill="#2B3247"/><path d="M-3 3q3 2 6 0" stroke="#2B3247" stroke-width="1.4" fill="none"/></g>`;
-  play.innerHTML = `<svg class="mouth" viewBox="0 0 400 270" id="mouth" aria-label="Boca de Bubu para cepillar">
-    <path d="M20 120 Q200 -10 380 120 Q200 290 20 120Z" fill="var(--bear)"/>
+  const D = SK().diente;
+  play.innerHTML = `<svg class="mouth" viewBox="0 0 400 270" id="mouth" aria-label="Boca para cepillar">
+    <path d="M20 120 Q200 -10 380 120 Q200 290 20 120Z" style="fill:${D.color}"/>
     <path d="M44 120 Q200 20 356 120 Q200 260 44 120Z" fill="#7A2E3A"/>
     <ellipse cx="200" cy="200" rx="70" ry="22" fill="#E86A7B"/>
     ${teeth.map((t,i)=>`<g data-t="${i}"><rect x="${t.x-20}" y="${t.y}" width="40" height="${t.h}" rx="14" fill="#fff" stroke="#E3E8EE" stroke-width="2"/>
@@ -1551,7 +1566,7 @@ function startDientes(){
       <rect x="${t.x-26}" y="${t.y-6}" width="52" height="${t.h+12}" fill="transparent"/></g>`).join('')}
     <g id="foam"></g>
   </svg><div class="meter" aria-hidden="true"><i id="meter"></i></div>`;
-  ask('¡Bubu comió dulces! Ayúdalo a cepillarse. Frota cada diente, arriba y abajo.');
+  ask(`¡${cap(D.who)} comió dulces! Ayúdalo a cepillarse. Frota cada diente, arriba y abajo.`);
   const svg = $('#mouth'), brush = $('#brush'); let brushing = false, cleaned = 0, lastSay = 0, foamN = 0;
   const lines = ['¡Arriba y abajo!','¡Chiqui, chiqui, chiqui!','¡Los bichitos se van!','¡Muy bien, sigue así!'];
   function moveBrush(e){ brush.style.left = e.clientX+'px'; brush.style.top = e.clientY+'px'; }
@@ -1580,10 +1595,11 @@ const TREATS = [{e:'🍬',n:'dulce',art:'El dulce es'},{e:'🍟',n:'papitas',art
 function startComida(){
   const GOAL = 4;
   const items = shuffle([...shuffle(HEALTHY).slice(0,4).map(f=>({...f,ok:1})), ...shuffle(TREATS).slice(0,2).map(f=>({...f,ok:0}))]);
-  play.innerHTML = `<div class="food-stage"><div class="avatar" data-char="bubu" style="width:clamp(90px,22vw,140px);height:clamp(90px,22vw,140px)"></div><div class="plate" id="plate"></div></div>
+  const C = SK().come;
+  play.innerHTML = `<div class="food-stage">${C.e ? `<div class="eater-big">${C.e}</div>` : `<div class="avatar" data-char="bubu" style="width:clamp(90px,22vw,140px);height:clamp(90px,22vw,140px)"></div>`}<div class="plate" id="plate"></div></div>
     <div class="foods">${items.map((f,i)=>`<button class="food" data-i="${i}" aria-label="${f.n}">${f.e}</button>`).join('')}</div>`;
   paintChars();
-  ask('¡Bubu tiene hambre! Llena su plato con comida que da energía.');
+  ask(`¡${cap(C.who)} tiene hambre! Llena su plato con comida que da energía.`);
   let n = 0;
   play.querySelectorAll('.food').forEach(b=>b.onclick=()=>{
     const f = items[+b.dataset.i];
@@ -1615,7 +1631,7 @@ const una = t => t.g === 'la' ? 'una' : 'un';
 function startMemoria(){
   const bag = timersBag(); cleanup = bag.clear;
   let level = 2;
-  const backSVG = `<svg viewBox="0 0 24 24"><path d="${STAR}" fill="#FFE27A"/></svg>`;
+  const backSVG = `<span class="mback">${SK().memo.e}</span>`;
   function deal(){
     bag.clear(); play.style.justifyContent = '';
     const items = shuffle(THINGS).slice(0, level), deck = shuffle([...items, ...items]);
@@ -1654,12 +1670,12 @@ function startQueFalta(){
   const starSVG = `<svg viewBox="0 0 24 24"><path d="${STAR}" fill="#FFE27A"/></svg>`;
   function next(){
     const items = shuffle(THINGS).slice(0, n), hideI = Math.random()*n|0, hidden = items[hideI];
-    play.innerHTML = dotsHTML(ROUNDS, round) + `<div class="shelf-wrap"><div class="shelf">${items.map(t=>`<span class="it">${t.e}</span>`).join('')}</div><div class="blanket">${starSVG}</div></div><div class="opts" hidden></div>`;
+    play.innerHTML = dotsHTML(ROUNDS, round) + `<div class="shelf-wrap"><div class="shelf">${items.map(t=>`<span class="it">${t.e}</span>`).join('')}</div><div class="blanket" style="background:${SK().falta.bg}">${starSVG}</div></div><div class="opts" hidden></div>`;
     const its = [...play.querySelectorAll('.shelf .it')];
     ask('¡Mira bien! ' + items.map(t => t.n).join(', ') + '.');
     its.forEach((el,i) => bag.later(() => { el.classList.add('bounce'); sfx.tick(); }, 700 + i*800));
     const showT = 1800 + n*900;
-    bag.later(() => { play.querySelector('.blanket').classList.add('down'); say('¡Bubu esconde una cosa!'); }, showT);
+    bag.later(() => { play.querySelector('.blanket').classList.add('down'); say(SK().falta.txt); }, showT);
     bag.later(() => {
       its[hideI].outerHTML = '<span class="gap">?</span>';
       play.querySelector('.blanket').classList.remove('down');
@@ -1688,17 +1704,17 @@ function startQueFalta(){
 function startVasitos(){
   const bag = timersBag(); cleanup = bag.clear;
   let round = 0; const ROUNDS = 4;
-  const COLS = ['#EF5B4C','#2F7DE1','#43A75A'], SLOT = [2, 35, 68];
+  const V = SK().vaso, COLS = V.cols, SLOT = [2, 35, 68];
   const cupSVG = c => `<svg class="cup" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M14 8 H86 L76 98 H24 Z" fill="${c}"/><rect x="6" y="2" width="88" height="13" rx="6.5" fill="${c}"/><rect x="6" y="2" width="88" height="13" rx="6.5" fill="#fff" opacity=".3"/><path d="M28 22 L33 88" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".35"/></svg>`;
-  const starSVG = `<svg class="cstar" viewBox="0 0 24 24"><path d="${STAR}" fill="#FFC93C" stroke="#E09A1F" stroke-width=".8"/></svg>`;
+  const starSVG = `<span class="cstar cemo">${V.item}</span>`;
   function next(){
     const swaps = Math.min(4, 1 + round);
-    play.innerHTML = dotsHTML(ROUNDS, round) + `<div class="cups">${[0,1,2].map(i=>`<button class="cw lift" style="left:${SLOT[i]}%" aria-label="Vasito">${starSVG}${cupSVG(COLS[i])}</button>`).join('')}</div>`;
+    play.innerHTML = dotsHTML(ROUNDS, round) + `<div class="cups">${[0,1,2].map(i=>`<button class="cw lift" style="left:${SLOT[i]}%" aria-label="${V.cover}">${starSVG}${cupSVG(COLS[i])}</button>`).join('')}</div>`;
     const cws = [...play.querySelectorAll('.cw')], pos = [0,1,2], star = Math.random()*3|0;
     cws[star].classList.add('has');
-    ask('¡Mira! La estrella está aquí.');
+    ask(`¡Mira! ${cap(V.itemN)} está aquí, en ${V.cover}.`);
     let ready = false, t = 2400;
-    bag.later(() => { cws.forEach(c => c.classList.remove('lift')); say('¡Sigue el vasito con tus ojos!'); }, t);
+    bag.later(() => { cws.forEach(c => c.classList.remove('lift')); say(`¡Sigue ${V.cover} con tus ojos!`); }, t);
     t += 1500;
     for (let k = 0; k < swaps; k++, t += 1150){
       bag.later(() => {
@@ -1708,7 +1724,7 @@ function startVasitos(){
         cws[x].classList.remove('hop'); void cws[x].offsetWidth; cws[x].classList.add('hop'); sfx.tick();
       }, t);
     }
-    bag.later(() => { ready = true; ask('¿Dónde está la estrella?'); }, t + 200);
+    bag.later(() => { ready = true; ask(`¿Dónde está ${V.itemN}?`); }, t + 200);
     cws.forEach((c, i) => c.onclick = () => {
       if (!ready) return; ready = false;
       c.classList.add('lift');
@@ -1905,20 +1921,21 @@ function startTamanos(){
 /* ---------- 13. PATITOS DE COLORES (clasificar) ---------- */
 const duckSVG = c => `<svg class="duck" viewBox="0 0 104 84"><g stroke="#fff" stroke-width="4"><ellipse cx="46" cy="54" rx="38" ry="22" fill="${c}"/><circle cx="74" cy="28" r="18" fill="${c}"/></g><path d="M90 28 l14 4 -14 6z" fill="#F59A23"/><circle cx="78" cy="23" r="3.6" fill="#2B3247"/><path d="M22 48 q14 -16 34 -2" stroke="rgba(0,0,0,.15)" stroke-width="5" fill="none"/></svg>`;
 function startPatitos(){
+  const Q = SK().clasif;
   const bag = timersBag(); cleanup = bag.clear;
   let round = 0; const ROUNDS = 3;
   function next(){
     const cols = shuffle(COLORS).slice(0,3), ducks = shuffle([...cols, ...cols]);
     play.innerHTML = dotsHTML(ROUNDS, round) + `<div class="ponds">${cols.map(c=>`<div class="pond drop" data-n="${c.n}" style="background:radial-gradient(ellipse at 40% 30%,color-mix(in srgb,${c.c} 55%,#fff),${c.c} 70%)"><span class="lbl">${c.n}</span></div>`).join('')}</div>
-      <div class="tray" style="margin-top:30px">${ducks.map(c=>`<span class="dk" data-n="${c.n}">${duckSVG(c.c)}</span>`).join('')}</div>`;
-    ask('Lleva cada patito a la laguna de su color.');
+      <div class="tray" style="margin-top:30px">${ducks.map(c=>`<span class="dk" data-n="${c.n}">${Q.draw === 'duck' ? duckSVG(c.c) : ITEM_SVG[Q.draw](c.c)}</span>`).join('')}</div>`;
+    ask(`Lleva cada ${Q.n} a ${Q.home === 'garaje' ? 'su garaje' : 'su ' + Q.home} del mismo color.`);
     let placed = 0;
     play.querySelectorAll('.dk').forEach(d => dragKit(d, {
       targets: () => [...play.querySelectorAll('.pond')],
       accept: p => p.dataset.n === d.dataset.n,
-      onDrop: p => { placeInto(d, p); sfx.yes(); burstAt(p, [COLORS.find(c=>c.n===p.dataset.n).c,'#fff','#BFF0FF']); placed++; say(`¡Patito ${d.dataset.n}!`);
-        if (placed === ducks.length){ round++; bag.later(() => round >= ROUNDS ? celebrate('patitos', '¡Todos los patitos en su laguna!', () => { round = 0; next(); }) : next(), 1500); } },
-      onFail: () => say(`Ese patito es ${d.dataset.n}. Busca la laguna ${d.dataset.n}.`)
+      onDrop: p => { placeInto(d, p); sfx.yes(); burstAt(p, [COLORS.find(c=>c.n===p.dataset.n).c,'#fff','#BFF0FF']); placed++; say(`¡${cap(Q.n)} ${colorAdj(d.dataset.n, Q.g)}!`);
+        if (placed === ducks.length){ round++; bag.later(() => round >= ROUNDS ? celebrate('patitos', `¡Cada ${Q.n} en su ${Q.home}!`, () => { round = 0; next(); }) : next(), 1500); } },
+      onFail: () => say(`${Q.g === 'la' ? 'Esa' : 'Ese'} ${Q.n} es ${colorAdj(d.dataset.n, Q.g)}. Búscale ${Q.home === 'garaje' ? 'el garaje' : 'la ' + Q.home} del mismo color.`)
     }));
   }
   next();
@@ -2351,7 +2368,7 @@ function startBus(){
   function next(){
     const N = [2,3,4,5][round] || 3, q = shuffle(PASS).slice(0,6);
     play.innerHTML = dotsHTML(ROUNDS, round) + `<div class="hud-chip"><span id="busN">0</span> / ${N}</div>
-      <div class="bus-wrap"><div class="bus" id="bus">${'<span class="seat"></span>'.repeat(5)}<span class="wheel" style="left:12%"></span><span class="wheel" style="right:12%"></span></div></div>
+      <div class="bus-wrap"><div class="bus" id="bus" style="background:${SK().bus};box-shadow:inset 0 -14px 0 rgba(0,0,0,.12),0 8px 0 ${SK().busShadow}">${'<span class="seat"></span>'.repeat(5)}<span class="wheel" style="left:12%"></span><span class="wheel" style="right:12%"></span></div></div>
       <div class="queue">${q.map(a=>`<button aria-label="Animal">${a}</button>`).join('')}</div>`;
     ask(`¡Sube ${NUM_WORDS[N]} animales al bus!`);
     let c = 0; const seats = [...play.querySelectorAll('.seat')];
@@ -2373,7 +2390,7 @@ function startBus(){
 function startBano(){
   const bag = timersBag(); cleanup = bag.clear;
   const STEPS = [
-    {q:'Bubu tiene ganas de ir al baño. ¿Dónde se sienta?', ok:'🚽', opts:['🚽','🛁','🛏️'], yes:'¡En el inodoro! Muy bien.'},
+    {q:`${TH.name} tiene ganas de ir al baño. ¿Dónde se sienta?`, ok:'🚽', opts:['🚽','🛁','🛏️'], yes:'¡En el inodoro! Muy bien.'},
     {q:'Ya terminó. ¿Qué usa para limpiarse?', ok:'🧻', opts:['🧻','🍌','🧸'], yes:'¡El papel! Y ahora bajamos la cadena. ¡Shhhh!'},
     {q:'¿Qué usamos para lavarnos las manos?', ok:'🧼', opts:['🧼','🍭','⚽'], yes:'¡El jabón!'}
   ];
@@ -2401,7 +2418,7 @@ function startBano(){
       p = Math.min(100, p + 1.2); $('#washM').style.width = p + '%';
       dirt.forEach((d,i) => d.style.opacity = Math.max(0, 1 - (p - i*14) / 30));
       if (++n % 4 === 0) fx.bubbles(e.clientX, e.clientY);
-      if (p >= 100){ sfx.win(); say('¡Manos limpias!'); bag.later(() => celebrate('bano', '¡Bubu fue al baño solito y se lavó las manos!', () => { s = 0; step(); }), 1200); }
+      if (p >= 100){ sfx.win(); say('¡Manos limpias!'); bag.later(() => celebrate('bano', `¡${TH.name} fue al baño ${SK().fem ? 'solita' : 'solito'} y se lavó las manos!`, () => { s = 0; step(); }), 1200); }
     };
   }
   step();
@@ -2414,7 +2431,7 @@ function startCocina(){
   function ingredients(){
     const items = shuffle(ING).slice(0,4);
     play.innerHTML = dotsHTML(4, 0) + `<div class="bowl drop" id="bowl"><span class="batter" id="batter"></span></div><div class="tray">${items.map(i=>`<span class="step-opt" style="width:auto;height:auto;padding:8px" data-n="${i.n}">${i.e}</span>`).join('')}</div>`;
-    ask('¡Hagamos cupcakes! Pon los ingredientes en el tazón.');
+    ask(`¡Hagamos ${SK().cocina.n}! Pon los ingredientes en el tazón.`);
     let c = 0;
     play.querySelectorAll('.tray .step-opt').forEach(t => dragKit(t, { tap:true,
       targets: () => [$('#bowl')], accept: () => true,
@@ -2440,8 +2457,8 @@ function startCocina(){
   }
   function decorate(){
     const TOPS = ['🍓','🍒','⭐','🍬','❤️','🫐'];
-    play.innerHTML = dotsHTML(4, 3) + `<div class="cupcake" id="cake">🧁</div><div class="tray">${TOPS.map(t=>`<button class="step-opt" style="width:1.3em;height:1.3em;font-size:44px" data-t="${t}">${t}</button>`).join('')}</div><button class="mini-btn" id="serve" hidden>¡Dar a Bubu!</button>`;
-    ask('¡Decora tu cupcake! Toca lo que quieras ponerle.');
+    play.innerHTML = dotsHTML(4, 3) + `<div class="cupcake" id="cake">${SK().cocina.e}</div><div class="tray">${TOPS.map(t=>`<button class="step-opt" style="width:1.3em;height:1.3em;font-size:44px" data-t="${t}">${t}</button>`).join('')}</div><button class="mini-btn" id="serve" hidden>¡Dar a ${TH.name}!</button>`;
+    ask(`¡Decora ${SK().cocina.una}! Toca lo que quieras ponerle.`);
     let n = 0; const cake = $('#cake');
     play.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
       if (n >= 7) return;
@@ -2450,7 +2467,7 @@ function startCocina(){
       cake.appendChild(s); n++; sfx.tick(); burstAt(s, ['#F06AAE','#FFE27A','#fff']);
       if (n === 3) $('#serve').hidden = false;
     });
-    $('#serve').onclick = () => celebrate('cocina', '¡Mmm! A Bubu le encantó tu cupcake.', ingredients, 'Hacer otro');
+    $('#serve').onclick = () => celebrate('cocina', `¡Mmm! A ${TH.name} le encantó ${SK().cocina.una}.`, ingredients, 'Hacer otro');
   }
   ingredients();
 }
@@ -2900,8 +2917,8 @@ function startRespira(){
   let raf = 0; cleanup = () => { bag.clear(); cancelAnimationFrame(raf); };
   const GOAL = 5; let breaths = 0, holding = false, scale = 1, inhaled = 0, last = 0, phase = 'idle';
   play.innerHTML = `<div class="dots" id="bDots">${Array.from({length:GOAL},()=>'<i></i>').join('')}</div>
-    <div class="breath-wrap"><button class="breath" id="breath" style="--bc:${TH.main}"><span id="bTxt">Mantén presionado</span></button></div>`;
-  ask('Vamos a respirar despacio. Mantén presionado el globo para tomar aire, y suelta para botarlo.');
+    <div class="breath-wrap"><button class="breath" id="breath" style="--bc:${TH.main}"><span class="bemo">${SK().respira.e}</span><span id="bTxt">Mantén presionado</span></button></div>`;
+  ask(`Vamos a respirar despacio. Deja tu dedo sobre ${SK().respira.n} para tomar aire, y suelta para botarlo.`);
   const ball = $('#breath'), txt = $('#bTxt');
   const step = t => {
     const dt = Math.min(50, t - (last || t)) / 1000; last = t;
@@ -2976,6 +2993,84 @@ $('#moreBtn').onclick = () => {
   say('¡Más juegos! ¿Cuál quieres jugar?');
 };
 $('#back1').onclick = () => backToPick();
+
+
+/* ---------- cada personaje cambia el elemento de los juegos ---------- */
+const dk = c => `color-mix(in srgb, ${c} 70%, #000)`;
+const ITEM_SVG = {
+  flor: c => `<svg viewBox="0 0 100 163" class="isvg"><path d="M50 160 C47 132 53 112 50 84" stroke="#3BAA4C" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M50 130 C34 118 22 122 16 131 C30 138 42 136 50 130Z" fill="#4FBF5A"/><path d="M50 112 C66 101 78 105 84 114 C71 121 58 119 50 112Z" fill="#4FBF5A"/>
+    ${[0,1,2,3,4,5].map(i=>{const a=i*Math.PI/3-Math.PI/2,x=50+27*Math.cos(a),y=52+27*Math.sin(a);return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="20" style="fill:${c};stroke:${dk(c)};stroke-width:2"/><ellipse cx="${(x-5).toFixed(1)}" cy="${(y-6).toFixed(1)}" rx="6" ry="4" fill="#fff" opacity=".35"/>`}).join('')}
+    <circle cx="50" cy="52" r="15" fill="${c==='#F7C531'?'#F5841F':'#FFD84A'}" stroke="#E09A1F" stroke-width="2"/><circle cx="45" cy="47" r="4" fill="#fff" opacity=".5"/></svg>`,
+  estrella: c => `<svg viewBox="0 0 100 163" class="isvg"><path d="M50 108 Q42 128 52 145 Q60 158 50 163" stroke="#C9A24A" stroke-width="2.5" fill="none"/>
+    <path transform="translate(50 62) scale(4.1) translate(-12 -12)" d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 21l1.6-7L2 9.2l7.1-.6z" style="fill:${c};stroke:${dk(c)};stroke-width:.5;stroke-linejoin:round"/>
+    <ellipse cx="38" cy="44" rx="7" ry="4" fill="#fff" opacity=".45" transform="rotate(-30 38 44)"/><circle cx="44" cy="64" r="3" fill="#2B3247"/><circle cx="56" cy="64" r="3" fill="#2B3247"/><path d="M45 72 Q50 77 55 72" stroke="#2B3247" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  mochila: c => `<svg viewBox="0 0 100 163" class="isvg"><path d="M36 46 C36 20 64 20 64 46" style="stroke:${dk(c)}" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <rect x="12" y="42" width="76" height="114" rx="24" style="fill:${c};stroke:${dk(c)};stroke-width:2.5"/>
+    <path d="M12 66 Q12 42 36 42 H64 Q88 42 88 66 V82 Q50 98 12 82Z" style="fill:color-mix(in srgb, ${c} 82%, #000)"/>
+    <rect x="43" y="78" width="14" height="14" rx="3" fill="#FFD84A" stroke="#E09A1F" stroke-width="2"/>
+    <rect x="26" y="104" width="48" height="38" rx="12" style="fill:color-mix(in srgb, ${c} 85%, #fff);stroke:${dk(c)};stroke-width:2"/><path d="M30 116 H70" style="stroke:${dk(c)}" stroke-width="2"/>
+    <ellipse cx="26" cy="64" rx="5" ry="12" fill="#fff" opacity=".28"/></svg>`,
+  mariposa: c => `<svg viewBox="0 0 104 84" class="duck"><ellipse cx="32" cy="30" rx="26" ry="22" style="fill:${c};stroke:${dk(c)};stroke-width:2"/><ellipse cx="72" cy="30" rx="26" ry="22" style="fill:${c};stroke:${dk(c)};stroke-width:2"/>
+    <ellipse cx="36" cy="62" rx="18" ry="15" style="fill:${c};stroke:${dk(c)};stroke-width:2"/><ellipse cx="68" cy="62" rx="18" ry="15" style="fill:${c};stroke:${dk(c)};stroke-width:2"/>
+    <circle cx="30" cy="28" r="7" fill="#fff" opacity=".55"/><circle cx="74" cy="28" r="7" fill="#fff" opacity=".55"/><rect x="47" y="14" width="10" height="62" rx="5" fill="#2B3247"/>
+    <path d="M50 16 Q42 2 36 4 M54 16 Q62 2 68 4" stroke="#2B3247" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  carro: c => `<svg viewBox="0 0 104 84" class="duck"><path d="M8 58 V44 Q10 36 22 34 L32 18 Q35 14 42 14 H66 Q73 14 77 20 L86 34 Q98 36 98 46 V58Z" style="fill:${c};stroke:${dk(c)};stroke-width:2.5"/>
+    <path d="M36 20 H52 V34 H28Z M58 20 H70 L78 34 H58Z" fill="#BFE6FF" stroke="#fff" stroke-width="2"/><circle cx="28" cy="62" r="12" fill="#2B3247"/><circle cx="78" cy="62" r="12" fill="#2B3247"/>
+    <circle cx="28" cy="62" r="5" fill="#C0C7D2"/><circle cx="78" cy="62" r="5" fill="#C0C7D2"/><circle cx="93" cy="44" r="3.5" fill="#FFD84A"/></svg>`,
+  estrellita: c => `<svg viewBox="0 0 104 84" class="duck"><path transform="translate(52 42) scale(3.3) translate(-12 -12)" d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 21l1.6-7L2 9.2l7.1-.6z" style="fill:${c};stroke:${dk(c)};stroke-width:.6;stroke-linejoin:round"/>
+    <circle cx="46" cy="42" r="2.6" fill="#2B3247"/><circle cx="58" cy="42" r="2.6" fill="#2B3247"/><path d="M47 49 Q52 53 57 49" stroke="#2B3247" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`
+};
+const FEM = {rojo:'roja', amarillo:'amarilla', morado:'morada', rosado:'rosada', naranja:'naranja', verde:'verde', azul:'azul'};
+const colorAdj = (n, g) => g === 'la' ? FEM[n] : n;
+const SKINS = {
+  lala:{ fem:1,
+    colores:{n:'flor', g:'la', draw:'flor'},
+    diente:{who:'el hipopótamo', color:'#B49BDB'},
+    come:{who:'el conejito', e:'🐰'},
+    memo:{e:'🌸'},
+    falta:{txt:'¡Una hoja gigante tapa el jardín!', bg:'repeating-linear-gradient(45deg,#4FBF5A 0 18px,#3FA44C 18px 36px)'},
+    vaso:{cover:'la maceta', covers:'macetas', item:'🐞', itemN:'la mariquita', cols:['#C9663B','#D9804F','#B85A33']},
+    clasif:{n:'mariposa', g:'la', p:'mariposas', draw:'mariposa', home:'flor', homes:'flores'},
+    bus:'linear-gradient(#FF9CC6,#E85A9B)', busShadow:'#A8336A',
+    cocina:{e:'🍪', n:'galletas', una:'tu galleta'},
+    respira:{e:'🌸', n:'la flor'} },
+  juan:{ fem:0,
+    colores:{n:'mochila', g:'la', draw:'mochila'},
+    diente:{who:'el dinosaurio', color:'#5FB85A'},
+    come:{who:'el dinosaurio', e:'🦕'},
+    memo:{e:'🧭'},
+    falta:{txt:'¡La manta del explorador lo tapa todo!', bg:'repeating-linear-gradient(45deg,#B5803F 0 18px,#9C6A30 18px 36px)'},
+    vaso:{cover:'el cofre', covers:'cofres', item:'💎', itemN:'el tesoro', cols:['#9C6A30','#B5803F','#87582A']},
+    clasif:{n:'carrito', g:'el', p:'carritos', draw:'carro', home:'garaje', homes:'garajes'},
+    bus:'linear-gradient(#8FD15F,#4E9A2E)', busShadow:'#2F6B1A',
+    cocina:{e:'🥞', n:'panqueques', una:'tus panqueques'},
+    respira:{e:'🎈', n:'el globo'} },
+  lucia:{ fem:1,
+    colores:{n:'estrella', g:'la', draw:'estrella'},
+    diente:{who:'el unicornio', color:'#F2C6E4'},
+    come:{who:'el unicornio', e:'🦄'},
+    memo:{e:'⭐'},
+    falta:{txt:'¡Una nube tapa todo el cielo!', bg:'radial-gradient(circle at 30% 40%,#fff 0 22%,transparent 23%),radial-gradient(circle at 70% 55%,#fff 0 25%,transparent 26%),linear-gradient(#DCE8FF,#C3D3FF)'},
+    vaso:{cover:'la nube', covers:'nubes', item:'⭐', itemN:'la estrella', cols:['#C3D3FF','#D8C9FF','#B9E3FF']},
+    clasif:{n:'estrellita', g:'la', p:'estrellitas', draw:'estrellita', home:'nube', homes:'nubes'},
+    bus:'linear-gradient(#C9B3FF,#8F6AE6)', busShadow:'#5B3BB0',
+    cocina:{e:'🎂', n:'un pastel', una:'tu pastel'},
+    respira:{e:'☁️', n:'la nube'} },
+  bubu:{ fem:0,
+    colores:{n:'globo', g:'el', draw:null},
+    diente:{who:'Bubu', color:'var(--bear)'},
+    come:{who:'Bubu', e:null},
+    memo:{e:'🍃'},
+    falta:{txt:'¡Bubu esconde una cosa!', bg:'repeating-linear-gradient(45deg,#3FA45B 0 18px,#37934F 18px 36px)'},
+    vaso:{cover:'el vasito', covers:'vasitos', item:'🍯', itemN:'la miel', cols:['#EF5B4C','#2F7DE1','#43A75A']},
+    clasif:{n:'patito', g:'el', p:'patitos', draw:'duck', home:'laguna', homes:'lagunas'},
+    bus:'linear-gradient(#FFD23F,#F5B700)', busShadow:'#B97C00',
+    cocina:{e:'🧁', n:'cupcakes', una:'tu cupcake'},
+    respira:{e:'🎈', n:'el globo'} }
+};
+const SK = () => SKINS[THEME_IDS[THI]] || SKINS.bubu;
+const itemHTML = (draw, c, colorName) => draw ? ITEM_SVG[draw](c) : `<img src="globo-${colorName}.webp" alt="">`;
 
 /* ---------- tiempo de sesión y despedida ---------- */
 let sessionStart = null;
