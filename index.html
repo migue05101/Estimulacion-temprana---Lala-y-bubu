@@ -491,6 +491,48 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
 .lslot.ok{border-color:transparent;color:var(--zc)}
 .ltile{width:clamp(64px,17vw,88px);aspect-ratio:1;border-radius:20px;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:clamp(40px,10vw,56px);color:#fff;box-shadow:inset 0 3px 0 rgba(255,255,255,.4),0 6px 0 rgba(0,0,0,.2)}
 
+/* Aprende las vocales */
+.av-wrap{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,14px)}
+.av-side{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,14px)}
+@media (orientation:landscape) and (max-height:640px){
+  .av-wrap{flex-direction:row;align-items:stretch}
+  .av-side{justify-content:center;flex:none}
+  .av-tabs{flex-direction:column;align-items:stretch}
+  .av-chips{flex-wrap:wrap;max-width:190px}
+  .av-stage{flex-direction:row;flex-wrap:wrap;align-content:center}
+  .av-stage .trace{height:100%;flex:0 1 auto;width:auto;max-width:none}
+  .av-stage .av-big{font-size:min(50vh,230px)}
+  .av-stage .av-pic{font-size:min(30vh,150px)}
+  .av-stage .av-ctrl{flex-direction:column}
+}
+.av-col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.av-tabs{display:flex;gap:clamp(6px,2vw,12px);justify-content:center;flex-wrap:wrap}
+.av-tab{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;font-family:var(--f-display);font-weight:800;font-size:clamp(15px,4vw,20px);background:#fff;color:var(--zc);box-shadow:0 4px 0 color-mix(in srgb,var(--zc) 30%,#fff)}
+.av-tab span{font-size:1.3em;line-height:1}
+.av-tab.on{background:var(--zc);color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--zc) 60%,#000)}
+.av-chips{display:flex;gap:clamp(6px,2vw,10px);justify-content:center}
+.av-chip{width:clamp(40px,11vw,54px);height:clamp(40px,11vw,54px);border-radius:30%;font-family:var(--f-display);font-weight:800;font-size:clamp(22px,6vw,30px);color:#fff;background:var(--vc);opacity:.45;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.av-chip.on{opacity:1;transform:scale(1.12)}
+.av-chip.done{opacity:.85;box-shadow:inset 0 -5px 0 var(--honey),0 3px 0 rgba(0,0,0,.15)}
+.av-stage{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2vh,16px)}
+.av-stage .trace{flex:1 1 0;min-height:0;height:0;width:100%;max-width:min(78vw,340px)}
+.av-big{font-family:'Baloo 2',var(--f-display);font-weight:800;line-height:.9;font-size:clamp(110px,min(40vw,30vh),240px);color:var(--vc);-webkit-text-stroke:8px #fff;paint-order:stroke fill;text-shadow:0 6px 0 color-mix(in srgb,var(--vc) 55%,#000),0 12px 16px rgba(0,0,0,.2);animation:catBob 3s ease-in-out infinite}
+.av-pic{font-size:clamp(90px,min(30vw,22vh),170px);line-height:1;animation:bob 3s ease-in-out infinite;filter:drop-shadow(0 8px 6px rgba(0,0,0,.18))}
+.av-word{font-family:'Baloo 2',var(--f-display);font-weight:800;font-size:clamp(34px,10vw,64px);line-height:1;color:var(--ink)}
+.av-word b{color:var(--vc);font-size:1.15em}
+.av-strip{display:flex;align-items:center;gap:12px;padding:8px 18px;border-radius:999px;background:#fff;box-shadow:0 4px 0 rgba(0,0,0,.08);animation:citemIn .5s cubic-bezier(.3,1.6,.5,1)}
+.av-strip .e{font-size:clamp(40px,11vw,60px);line-height:1}
+.av-strip .av-word{font-size:clamp(28px,8vw,44px)}
+.av-ctrl{display:flex;align-items:center;justify-content:center;gap:clamp(14px,5vw,28px)}
+.av-mic{position:relative;width:clamp(84px,24vw,116px);aspect-ratio:1;border-radius:50%;font-size:clamp(40px,11vw,56px);background:radial-gradient(circle at 40% 30%,#FF8FB8,#E0457B);box-shadow:0 6px 0 #A8285A,0 10px 20px rgba(224,69,123,.35);display:grid;place-items:center;animation:pulse 1.8s ease-in-out infinite}
+.av-mic::after{content:'';position:absolute;inset:-10px;border-radius:50%;border:5px solid #E0457B;opacity:0}
+.av-mic.on{animation:none;background:radial-gradient(circle at 40% 30%,#8FE3A0,#2FA34B);box-shadow:0 6px 0 #1E7A35,0 10px 20px rgba(47,163,75,.35)}
+.av-mic.on::after{border-color:#2FA34B;animation:micRing 1s ease-out infinite}
+@keyframes micRing{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+.av-ear{width:clamp(56px,15vw,72px);aspect-ratio:1;border-radius:50%;font-size:clamp(26px,7vw,34px);background:#fff;box-shadow:0 4px 0 rgba(0,0,0,.12);display:grid;place-items:center}
+.av-ok{padding:10px 18px;border-radius:999px;background:var(--honey);font-family:var(--f-display);font-weight:800;font-size:clamp(15px,4vw,19px);color:#5A3B00;box-shadow:0 4px 0 #C98A00}
+.av-note{font-size:12px;color:var(--ink-soft);text-align:center;max-width:320px;margin:0}
+
 /* Rompecabezas */
 .pz-board{position:relative;display:grid;border-radius:14px;overflow:hidden;box-shadow:0 0 0 5px #fff,0 6px 16px rgba(0,0,0,.2);max-width:100%}
 .pz-ghost{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.22;filter:grayscale(.4)}
@@ -1021,14 +1063,14 @@ function pickVoice(){
   }catch(e){}
 }
 try{ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }catch(e){}
-let bubbleEl = null;
+let bubbleEl = null, lastUtter = null;
 function say(text, bubble){
   const b = bubble || bubbleEl; if (b) b.textContent = text;
   try{
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text.replace(/[¡¿]/g,''));
     u.lang = voice ? voice.lang : 'es-CO'; if (voice) u.voice = voice;
-    u.rate = .92; u.pitch = 1.25;
+    u.rate = .92; u.pitch = 1.25; lastUtter = u;
     speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -1150,7 +1192,8 @@ const ZONES = [
   {id:'bus', name:'El bus', guide:'juan', color:'#E3A400', hint:'cuenta y sube', icon:'🚌', page:2, cat:'Lógica y números', start:startBus},
   {id:'bomberos', name:'Bomberos', guide:'bubu', color:'#D93A2B', hint:'apaga y cuenta', icon:'🚒', page:2, cat:'Lógica y números', start:startBomberos},
   {id:'rompecabezas', name:'Rompecabezas', guide:'lucia', color:'#3D8B5A', hint:'arma la escena', icon:'🧩', page:2, cat:'Lógica y números', start:startRompecabezas},
-  {id:'vocales', name:'Vocales', guide:'lucia', color:'#6C4AD0', hint:'A de abeja', icon:'🅰️', page:2, cat:'Letras y palabras', start:startVocales},
+  {id:'aprendevoc', name:'Aprende las vocales', guide:'lala', color:'#E0457B', hint:'dibuja, dila y repite', icon:'🔤', page:2, cat:'Letras y palabras', start:startAprendeVocales},
+  {id:'vocales', name:'¿Con qué empieza?', guide:'lucia', color:'#6C4AD0', hint:'A de abeja', icon:'🅰️', page:2, cat:'Letras y palabras', start:startVocales},
   {id:'animales', name:'¿Quién dice?', guide:'juan', color:'#D6A21B', hint:'sonidos con Juan', icon:'🐮', page:2, cat:'Letras y palabras', start:startAnimales},
   {id:'pintar', name:'Pintar', guide:'lala', color:'#F0612E', hint:'colorea y dibuja', icon:'🖍️', page:2, cat:'Arte y música', start:startPintar},
   {id:'xilofono', name:'Música', guide:'bubu', color:'#2E7FD8', hint:'instrumentos y canciones', icon:'🎹', page:2, cat:'Arte y música', start:startMusica},
@@ -2084,6 +2127,203 @@ function startVocales(){
     }));
   }
   next();
+}
+
+/* ---------- 15b. APRENDE LAS VOCALES: dibujar, decir (micrófono) y palabras ---------- */
+const VTRACE = {
+  A:['M100 34 L42 226','M100 34 L158 226','M64 160 L136 160'],
+  E:['M66 40 L66 222','M66 40 L146 40','M66 130 L134 130','M66 222 L146 222'],
+  I:['M100 40 L100 222'],
+  O:['M100 36 C34 36 34 224 100 224 C166 224 166 36 100 36'],
+  U:['M52 40 L52 160 C52 238 148 238 148 160 L148 40']
+};
+const VWORDS = {
+  A:[{w:'avión',e:'✈️'},{w:'abeja',e:'🐝'},{w:'ardilla',e:'🐿️'},{w:'árbol',e:'🌳'},{w:'agua',e:'💧'}],
+  E:[{w:'elefante',e:'🐘'},{w:'estrella',e:'⭐'},{w:'escoba',e:'🧹'},{w:'erizo',e:'🦔'}],
+  I:[{w:'iguana',e:'🦎'},{w:'isla',e:'🏝️'},{w:'imán',e:'🧲'},{w:'iglú',e:'🛖'}],
+  O:[{w:'oso',e:'🐻'},{w:'oveja',e:'🐑'},{w:'ojo',e:'👁️'},{w:'ola',e:'🌊'}],
+  U:[{w:'uvas',e:'🍇'},{w:'unicornio',e:'🦄'},{w:'uno',e:'1️⃣'}]
+};
+// hablar y esperar a que termine (para que el micrófono no escuche la voz de la app)
+function sayP(text){
+  return new Promise(res => {
+    say(text); let ok = false; const f = () => { if (!ok){ ok = true; res(); } };
+    try{ if (lastUtter) lastUtter.onend = () => setTimeout(f, 250); }catch(e){}
+    setTimeout(f, 1200 + text.length*85);
+  });
+}
+// Reconocimiento de voz del navegador (Chrome/Android, Safari/iPhone). Devuelve lo que entendió.
+const SRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+function hear(test, ms = 5000){
+  return new Promise(res => {
+    if (!SRec) return res({err:'unsupported', alts:[]});
+    let r; try{ r = new SRec(); }catch(e){ return res({err:'unsupported', alts:[]}); }
+    r.lang = 'es-CO'; r.interimResults = true; r.maxAlternatives = 5; r.continuous = false;
+    const alts = new Set(); let done = false, err = null, ok = false;
+    const fin = () => { if (done) return; done = true; clearTimeout(t); try{ r.abort(); }catch(e){} res({alts:[...alts], err, ok}); };
+    r.onresult = e => { for (const rr of e.results) for (let i = 0; i < rr.length; i++) alts.add(rr[i].transcript);
+      if (test([...alts])){ ok = true; setTimeout(fin, 150); } };
+    r.onerror = e => { err = e.error; };
+    r.onend = fin;
+    const t = setTimeout(fin, ms);
+    try{ speechSynthesis.cancel(); r.start(); }catch(e){ err = 'start'; fin(); }
+  });
+}
+const vnorm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zñ ]/g,' ').trim();
+function vowelHeard(alts, V){
+  const v = V.toLowerCase();
+  return alts.some(a => vnorm(a).split(/\s+/).some(w => {
+    let x = w.replace(/h/g,''); if (v === 'i') x = x.replace(/y/g,'i');
+    x = x.replace(/(.)\1+/g,'$1');
+    return x === v || (v === 'a' && x === 'ai') || (v === 'e' && x === 'ei') || (v === 'o' && x === 'ou');
+  }));
+}
+function lev(a, b){
+  const d = Array.from({length:a.length+1}, (_,i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+// generoso: a los 2-3 años las palabras salen a medias
+function wordHeard(alts, word){
+  const t = vnorm(word);
+  return alts.some(a => { const n = vnorm(a); if (n.includes(t)) return true;
+    return n.split(/\s+/).some(w => w && (lev(w, t) <= Math.max(1, Math.floor(t.length*.34)) || (t.length >= 5 && w.length >= 3 && w[0] === t[0] && t.startsWith(w.slice(0,3))))); });
+}
+// trazar una figura con el dedo; strokes en viewBox 200x260
+function traceIn(host, strokes, color, onDone){
+  const NS = 'http://www.w3.org/2000/svg';
+  host.insertAdjacentHTML('beforeend', `<svg class="trace" viewBox="0 0 200 260" role="img" aria-label="Traza con el dedo"><g class="sil"></g><g class="gd"></g><g class="ink"></g><g class="mk"></g></svg>`);
+  const svg = host.lastElementChild, g = c => svg.querySelector(c);
+  const mk = (tag, at, par) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); par.appendChild(e); return e; };
+  const data = strokes.map(d => {
+    mk('path',{d,fill:'none',stroke:`color-mix(in srgb, ${color} 18%, #fff)`,'stroke-width':46,'stroke-linecap':'round','stroke-linejoin':'round'},g('.sil'));
+    mk('path',{d,fill:'none',stroke:'#B8C0CF','stroke-width':4,'stroke-linecap':'round','stroke-dasharray':'0.1 11'},g('.gd'));
+    const ink = mk('path',{d,fill:'none',stroke:color,'stroke-width':30,'stroke-linecap':'round','stroke-linejoin':'round'},g('.ink'));
+    const L = ink.getTotalLength(), pts = [];
+    for (let s = 0; s <= L; s += 5) pts.push(ink.getPointAtLength(s));
+    pts.push(ink.getPointAtLength(L)); ink.style.strokeDasharray = L; ink.style.strokeDashoffset = L;
+    return {ink, L, pts, idx:0};
+  });
+  let cur = 0, drawing = false, warn = 0;
+  function marks(){
+    const m = g('.mk'); m.innerHTML = ''; if (cur >= data.length) return;
+    const s = data[cur], p0 = s.pts[0], a = s.pts[Math.min(5,s.pts.length-1)], b = s.pts[Math.min(9,s.pts.length-1)];
+    mk('path',{d:'M-9 -9 L9 0 L-9 9 Z',fill:'var(--ink)',opacity:.55,transform:`translate(${b.x} ${b.y}) rotate(${Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI})`},m);
+    mk('path',{d:STAR,fill:'var(--honey)',stroke:'#fff','stroke-width':1.2,transform:`translate(${p0.x-17} ${p0.y-17}) scale(1.45)`},m);
+  }
+  const setInk = s => s.ink.style.strokeDashoffset = Math.max(0, s.L - s.idx/(s.pts.length-1)*s.L);
+  const toSvg = e => { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); };
+  const dist = (a,b) => Math.hypot(a.x-b.x, a.y-b.y);
+  marks();
+  svg.onpointerdown = e => { if (cur >= data.length) return; const p = toSvg(e), s = data[cur];
+    if (dist(p, s.pts[s.idx]) < 46){ drawing = true; try{ svg.setPointerCapture(e.pointerId); }catch(_){} }
+    else if (Date.now()-warn > 2500){ warn = Date.now(); say(s.idx ? 'Sigue desde donde ibas.' : 'Empieza en la estrellita.'); } };
+  svg.onpointermove = e => {
+    if (!drawing || cur >= data.length) return;
+    const p = toSvg(e), s = data[cur]; let best = -1;
+    for (let j = s.idx+1; j <= Math.min(s.idx+9, s.pts.length-1); j++) if (dist(p, s.pts[j]) < 36) best = j;
+    if (best > s.idx){ s.idx = best; setInk(s); if (best % 6 === 0) sfx.tick(); if (best % 2 === 0) fx.sparkle(e.clientX, e.clientY); }
+    else if (dist(p, s.pts[s.idx]) > 88){ drawing = false; sfx.soft(); if (s.idx > 3){ s.idx = 0; setInk(s); }
+      if (Date.now()-warn > 1500){ warn = Date.now(); say('¡Uy! Volvamos a la estrellita.'); } }
+    if (s.idx >= s.pts.length-3){
+      s.idx = s.pts.length-1; setInk(s); cur++; drawing = false; sfx.yes();
+      fx.burst(e.clientX, e.clientY, {count:18, shape:['star','glow'], size:10, speed:6, twinkle:1});
+      if (cur < data.length){ marks(); say('¡Muy bien! Ahora la otra rayita.'); }
+      else { marks(); svg.querySelectorAll('.sil path').forEach(q => q.setAttribute('stroke', `color-mix(in srgb, ${color} 45%, #fff)`)); onDone(svg); }
+    }
+  };
+  svg.onpointerup = svg.onpointercancel = () => { drawing = false; };
+  return svg;
+}
+function startAprendeVocales(){
+  const bag = timersBag(); let alive = true;
+  cleanup = () => { alive = false; bag.clear(); try{ speechSynthesis.cancel(); }catch(e){} };
+  const VS = ['A','E','I','O','U'], MODES = [['trazar','✏️','Dibujar'],['decir','🎤','Decir'],['palabras','🗣️','Palabras']];
+  let mode = 'trazar', vi = 0, fails = 0, busy = false, micBlocked = !SRec;
+  const done = {trazar:new Set(), decir:new Set(), palabras:new Set()};
+  const V = () => VS[vi], col = () => VCOL[V()];
+  function frame(){
+    play.style.setProperty('--vc', col());
+    play.innerHTML = `<div class="av-wrap"><div class="av-side"><div class="av-tabs">${MODES.map(([m,i,t]) => `<button class="av-tab ${m===mode?'on':''}" data-m="${m}"><span>${i}</span>${t}</button>`).join('')}</div>
+      <div class="av-chips">${VS.map((l,i) => `<button class="av-chip ${i===vi?'on':''} ${done[mode].has(l)?'done':''}" style="--vc:${VCOL[l]}" data-i="${i}">${l}</button>`).join('')}</div></div>
+      <div class="av-stage"></div></div>`;
+    play.querySelectorAll('.av-tab').forEach(b => b.onclick = () => { if (b.dataset.m === mode) return; mode = b.dataset.m; vi = 0; go(); });
+    play.querySelectorAll('.av-chip').forEach(b => b.onclick = () => { vi = +b.dataset.i; go(); });
+    return play.querySelector('.av-stage');
+  }
+  function go(){ bag.clear(); busy = false; fails = 0; try{ speechSynthesis.cancel(); }catch(e){} const st = frame(); ({trazar, decir, palabras})[mode](st); }
+  function advance(){
+    done[mode].add(V());
+    if (done[mode].size >= 5 && vi === 4){
+      const msg = {trazar:'¡Dibujaste todas las vocales!', decir:'¡Dijiste todas las vocales!', palabras:'¡Aprendiste palabras nuevas!'}[mode];
+      bag.later(() => celebrate('aprendevoc', msg, () => { done[mode].clear(); vi = 0; go(); }, '¡Otra vez!'), 600);
+      return;
+    }
+    vi = (vi + 1) % 5; go();
+  }
+  const winFx = el => { const [x,y] = fx.at(el); fx.burst(x, y, {count:40, colors:[col(),'#fff','#FFE27A'], shape:['star','confetti','glow'], size:12, speed:9, twinkle:1}); sfx.yes(); };
+  // 1. dibujar la vocal con el dedo
+  function trazar(st){
+    const w = pick(VWORDS[V()]);
+    ask(`Esta es la ${V()}. Pon tu dedo en la estrellita y dibújala.`);
+    traceIn(st, VTRACE[V()], col(), svg => {
+      const [x,y] = fx.at(svg); fx.win(x, y);
+      st.insertAdjacentHTML('beforeend', `<div class="av-strip"><span class="e">${w.e}</span><span class="av-word"><b>${w.w[0].toUpperCase()}</b>${w.w.slice(1)}</span></div>`);
+      say(`¡Muy bien! ¡La ${V()}! ${V()} de ${w.w}.`);
+      bag.later(advance, 2800);
+    });
+  }
+  // controles de escucha: micrófono + volver a oír (+ botón para papás si no hay micrófono)
+  function controls(st, again, test, onOk, onMiss){
+    st.insertAdjacentHTML('beforeend', `<div class="av-ctrl"><button class="av-ear" aria-label="Escuchar otra vez">🔊</button><button class="av-mic" aria-label="Hablar">🎤</button></div>
+      <button class="av-ok" ${micBlocked ? '' : 'hidden'}>👏 ¡Lo dijo!</button><p class="av-note" ${micBlocked ? '' : 'hidden'}>Sin micrófono: cuando tu hijo lo diga, toca “¡Lo dijo!”.</p>`);
+    const mic = st.querySelector('.av-mic'), ok = st.querySelector('.av-ok'), note = st.querySelector('.av-note');
+    st.querySelector('.av-ear').onclick = () => { if (!busy) sayP(again()); };
+    ok.onclick = () => { if (busy) return; busy = true; onOk(ok); };
+    mic.onclick = async () => {
+      if (busy) return;
+      if (micBlocked){ say('Dilo en voz alta. ¡Te escucho!'); return; }
+      busy = true; mic.classList.add('on'); tone([880],.08,'sine',.08);
+      const r = await hear(test);
+      if (!alive) return;
+      mic.classList.remove('on'); busy = false;
+      if (r.ok){ busy = true; onOk(mic); return; }
+      if (['not-allowed','service-not-allowed','audio-capture','unsupported','start','network'].includes(r.err)){
+        micBlocked = true; ok.hidden = false; note.hidden = false;
+        note.textContent = r.err === 'network' ? 'El reconocimiento de voz necesita internet. Mientras tanto, toca “¡Lo dijo!” cuando tu hijo lo diga.'
+          : 'El micrófono no está disponible aquí. Ábrela desde el enlace de GitHub y permite el micrófono, o toca “¡Lo dijo!”.';
+        say('Dilo en voz alta.'); return;
+      }
+      if (!r.alts.length){ say('No te escuché. Toca el micrófono y habla duro.'); return; }
+      fails++; onMiss(fails);
+    };
+  }
+  // 2. escuchar la vocal y decirla
+  function decir(st){
+    st.insertAdjacentHTML('beforeend', `<div class="av-big">${V()}</div>`);
+    const big = st.querySelector('.av-big');
+    const again = () => `Escucha: ${V().toLowerCase()}… ${V().toLowerCase()}. Ahora dila tú.`;
+    controls(st, again, alts => vowelHeard(alts, V()),
+      el => { winFx(big); say(`¡Muy bien! ¡Dijiste ${V()}!`); bag.later(advance, 2200); },
+      n => { if (n >= 2){ busy = true; say(`¡Buen intento! La ${V()} suena así: ${V().toLowerCase()}. ¡Vamos con la siguiente!`); bag.later(advance, 3600); }
+             else say(`Casi. Escucha: ${V().toLowerCase()}. ¡Otra vez!`); });
+    ask(`Esta es la ${V()}. Escucha: ${V().toLowerCase()}. Toca el micrófono y dila tú.`);
+  }
+  // 3. palabras: A de avión… escucha y repite
+  function palabras(st){
+    const w = pick(VWORDS[V()]);
+    st.insertAdjacentHTML('beforeend', `<div class="av-col"><div class="av-pic">${w.e}</div><div class="av-word"><b>${w.w[0].toUpperCase()}</b>${w.w.slice(1)}</div></div>`);
+    const pic = st.querySelector('.av-pic');
+    pic.onclick = () => { if (!busy) say(w.w); };
+    controls(st, () => `${w.w}. Repite: ${w.w}.`, alts => wordHeard(alts, w.w),
+      el => { winFx(pic); say(`¡Muy bien! ¡${cap(w.w)}! ${V()} de ${w.w}.`); bag.later(advance, 2600); },
+      n => { if (n >= 2){ busy = true; say(`¡Buen intento! Se dice ${w.w}. ¡Sigamos!`); bag.later(advance, 3200); }
+             else say(`Casi. Escucha: ${w.w}. ¡Otra vez!`); });
+    ask(`${V()} de ${w.w}. Toca el micrófono y repite: ${w.w}.`);
+  }
+  go();
 }
 
 /* ---------- 16. ROMPECABEZAS (con escenas de la serie) ---------- */
