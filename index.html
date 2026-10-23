@@ -238,6 +238,12 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
 .vids-player .big-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:96px;height:68px;border-radius:20px;background:#E62117;box-shadow:0 6px 18px rgba(0,0,0,.35);display:grid;place-items:center;animation:pulse 1.8s ease-in-out infinite}
 .vids-player .big-play svg{width:44px;height:44px}
 .vids-player .vt{position:absolute;left:0;right:0;bottom:0;padding:22px 16px 12px;color:#fff;font-family:var(--f-display);font-weight:800;font-size:clamp(16px,3.6vw,22px);background:linear-gradient(transparent,rgba(0,0,0,.6));text-align:left}
+.vposter{position:absolute;inset:0;display:grid;place-items:center;background:url(elegir-h.jpg) center/cover}
+.vposter::before{content:'';position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.1),rgba(60,20,60,.45))}
+.vposter img{position:relative;width:32%;max-width:240px;margin-top:-30%;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.vids-body.solo{justify-content:center;align-items:center}
+.vids-body.solo .vids-grid{display:none}
+.vids-body.solo .vids-player{width:min(100%, calc((100vh - 120px) * 16 / 9));max-width:none;height:auto;align-self:center}
 .vids-empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:#fff;padding:20px;font-family:var(--f-display);font-size:clamp(18px,4vw,24px);background:linear-gradient(135deg,#7B4FD6,#E0457B)}
 .vids-grid{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;align-content:start;padding:4px 4px 20px;-webkit-overflow-scrolling:touch}
 .vcard{display:flex;flex-direction:column;gap:6px;border-radius:16px;background:#fff;padding:6px;box-shadow:0 4px 0 rgba(0,0,0,.1);text-align:left}
@@ -3704,7 +3710,7 @@ const CHANNEL_VIDEOS = [
   // {id:'XXXXXXXXXXX', t:'Título del video'},
 ];
 // Opcional: el ID del canal (empieza por UC…). Con él aparece "Todos los videos" en orden, sin mantener la lista a mano.
-const CHANNEL_ID = '';
+const CHANNEL_ID = 'UCIi6H94dmnwmOl0UTSNuBGg';   // canal @Lalaybubu
 function ytEmbed(v, auto){
   const base = v.list ? `https://www.youtube.com/embed/videoseries?list=${v.list}&` : `https://www.youtube.com/embed/${v.id}?`;
   return base + `autoplay=${auto ? 1 : 0}&rel=0&playsinline=1&modestbranding=1`;
@@ -3719,13 +3725,14 @@ function openVideos(){
     const v = list[i];
     G.querySelectorAll('.vcard').forEach((c,k) => c.classList.toggle('on', k === i));
     if (auto){ P.innerHTML = `<iframe src="${ytEmbed(v, true)}" title="${v.t}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`; return; }
-    P.innerHTML = `${(v.id || v.thumb) ? `<img class="poster" src="${thumb(v)}" alt="">` : ''}<button class="big-play" aria-label="Ver ${v.t}"><svg viewBox="0 0 24 24"><path fill="#fff" d="M8 5.5v13l10.5-6.5z"/></svg></button><div class="vt">${v.t}</div>`;
+    P.innerHTML = `${(v.id || v.thumb) ? `<img class="poster" src="${thumb(v)}" alt="">` : `<div class="vposter"><img src="logo.webp" alt="Lala y Bubu"></div>`}<button class="big-play" aria-label="Ver ${v.t}"><svg viewBox="0 0 24 24"><path fill="#fff" d="M8 5.5v13l10.5-6.5z"/></svg></button><div class="vt">${v.t}</div>`;
     P.querySelector('.big-play').onclick = () => { sfx.yes(); show(i, true); };
   }
   if (!list.length){
     P.innerHTML = `<div class="vids-empty">¡Muy pronto verás aquí los videos de Lala y Bubu! 🐻⭐</div>`; G.innerHTML = '';
   } else {
-    G.innerHTML = list.map((v,i) => `<button class="vcard" data-i="${i}">${(v.id || v.thumb) ? `<img src="${thumb(v)}" alt="" loading="lazy">` : ''}<b>${v.t}</b></button>`).join('');
+    $('#videos .vids-body').classList.toggle('solo', list.length === 1);
+    G.innerHTML = list.length === 1 ? '' : list.map((v,i) => `<button class="vcard" data-i="${i}">${(v.id || v.thumb) ? `<img src="${thumb(v)}" alt="" loading="lazy">` : ''}<b>${v.t}</b></button>`).join('');
     G.querySelectorAll('.vcard').forEach(c => c.onclick = () => { sfx.tick(); show(+c.dataset.i, true); });
     show(0, false);
   }
