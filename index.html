@@ -244,6 +244,8 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
 .vids-body.solo{justify-content:center;align-items:center}
 .vids-body.solo .vids-grid{display:none}
 .vids-body.solo .vids-player{width:min(100%, calc((100vh - 120px) * 16 / 9));max-width:none;height:auto;align-self:center}
+.vids-wait{grid-column:1/-1;text-align:center;font-family:var(--f-display);font-size:18px;color:var(--ink-soft);margin:20px 0}
+.vcard b:empty{display:none}
 .vids-empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:#fff;padding:20px;font-family:var(--f-display);font-size:clamp(18px,4vw,24px);background:linear-gradient(135deg,#7B4FD6,#E0457B)}
 .vids-grid{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;align-content:start;padding:4px 4px 20px;-webkit-overflow-scrolling:touch}
 .vcard{display:flex;flex-direction:column;gap:6px;border-radius:16px;background:#fff;padding:6px;box-shadow:0 4px 0 rgba(0,0,0,.1);text-align:left}
@@ -253,7 +255,7 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
 @media (orientation:landscape){
   .vids-body{flex-direction:row}
   .vids-player{width:auto;height:100%;max-width:64%;align-self:flex-start;max-height:100%}
-  .vids-grid{grid-template-columns:1fr}
+  .vids-grid{grid-template-columns:repeat(2,1fr)}
 }
 .glass .ico{width:58%;height:58%}
 .glass .ring{position:absolute;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);transform:rotate(-90deg);overflow:visible}
@@ -3715,11 +3717,77 @@ function ytEmbed(v, auto){
   const base = v.list ? `https://www.youtube.com/embed/videoseries?list=${v.list}&` : `https://www.youtube.com/embed/${v.id}?`;
   return base + `autoplay=${auto ? 1 : 0}&rel=0&playsinline=1&modestbranding=1`;
 }
+// API oficial de YouTube: con ella el reproductor carga la lista del canal y nos dice qué videos tiene,
+// así podemos mostrar todas las miniaturas para que el niño elija, sin mantener la lista a mano.
+let ytApi = null, ytPlayer = null;
+function loadYT(){
+  if (window.YT && YT.Player) return Promise.resolve(YT);
+  if (ytApi) return ytApi;
+  ytApi = new Promise((res, rej) => {
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => { try{ prev && prev(); }catch(e){} res(YT); };
+    const sc = document.createElement('script'); sc.src = 'https://www.youtube.com/iframe_api';
+    sc.onerror = () => { ytApi = null; rej(new Error('yt')); }; document.head.appendChild(sc);
+    setTimeout(() => { if (!(window.YT && YT.Player)){ ytApi = null; rej(new Error('timeout')); } }, 9000);
+  });
+  return ytApi;
+}
+// títulos de los videos (servicio público noembed, con caché en el teléfono)
+let ytTitles = {}; try{ ytTitles = JSON.parse(localStorage.getItem('ytTitles') || '{}'); }catch(e){}
+async function fillTitles(ids, G){
+  let k = 0;
+  const work = async () => { while (k < ids.length){ const id = ids[k++]; if (G.hidden || !document.contains(G)) return;
+    let t = ytTitles[id];
+    if (!t){ try{ const r = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${id}`); const j = await r.json(); t = j.title || ''; if (t){ ytTitles[id] = t; try{ localStorage.setItem('ytTitles', JSON.stringify(ytTitles)); }catch(e){} } }catch(e){ t = ''; } }
+    const c = G.querySelector(`.vcard[data-id="${id}"] b`); if (c && t) c.textContent = t; } };
+  await Promise.all([work(), work(), work(), work()]);
+}
+const ytThumb = id => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 function openVideos(){
   try{ speechSynthesis.cancel(); }catch(e){}
   menuVid.pause(); fx.ambient(null);
-  const list = [...(CHANNEL_ID ? [{list:'UU' + CHANNEL_ID.slice(2), t:'Todos los videos', thumb: CHANNEL_VIDEOS[0] && CHANNEL_VIDEOS[0].id}] : []), ...CHANNEL_VIDEOS];
-  const thumb = v => `https://i.ytimg.com/vi/${v.id || v.thumb}/hqdefault.jpg`;
+  $('#videos').hidden = false;
+  if (CHANNEL_ID) openChannel(); else openManual(CHANNEL_VIDEOS);
+}
+function openChannel(){
+  const P = $('#vidPlayer'), G = $('#vidGrid'), body = $('#videos .vids-body');
+  body.classList.remove('solo');
+  P.innerHTML = `<div id="ytPlayer"></div>`;
+  G.innerHTML = `<p class="vids-wait">Cargando los videos… 🐻</p>`;
+  let gave = false;
+  const fallback = () => { if (gave || $('#videos').hidden) return; gave = true; try{ ytPlayer && ytPlayer.destroy(); }catch(e){} ytPlayer = null;
+    openManual([{list:'UU' + CHANNEL_ID.slice(2), t:'Todos los videos'}, ...CHANNEL_VIDEOS]); };
+  const failT = setTimeout(fallback, 12000);
+  loadYT().then(YT => {
+    if ($('#videos').hidden || gave) return;
+    let tries = 0;
+    ytPlayer = new YT.Player('ytPlayer', { width:'100%', height:'100%',
+      playerVars:{ listType:'playlist', list:'UU' + CHANNEL_ID.slice(2), rel:0, playsinline:1, modestbranding:1 },
+      events:{
+        onReady: () => {
+          const grab = () => {
+            if (gave || !ytPlayer) return;
+            const ids = ytPlayer.getPlaylist && ytPlayer.getPlaylist();
+            if (ids && ids.length){ clearTimeout(failT); renderGrid(ids); return; }
+            if (++tries < 15) setTimeout(grab, 600); else { clearTimeout(failT); fallback(); }
+          };
+          grab();
+        },
+        onStateChange: () => { try{ const i = ytPlayer.getPlaylistIndex(); G.querySelectorAll('.vcard').forEach((c,k) => c.classList.toggle('on', k === i)); }catch(e){} }
+      } });
+  }).catch(() => { clearTimeout(failT); fallback(); });
+  function renderGrid(ids){
+    G.innerHTML = ids.map((id,i) => `<button class="vcard" data-i="${i}" data-id="${id}"><img src="${ytThumb(id)}" alt="" loading="lazy"><b>${ytTitles[id] || ''}</b></button>`).join('');
+    G.querySelectorAll('.vcard').forEach(c => c.onclick = () => {
+      sfx.tick(); G.querySelectorAll('.vcard').forEach(x => x.classList.toggle('on', x === c));
+      try{ ytPlayer.playVideoAt(+c.dataset.i); }catch(e){}
+      if (innerWidth < innerHeight) P.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    fillTitles(ids, G);
+  }
+}
+function openManual(list){
+  const thumb = v => ytThumb(v.id || v.thumb);
   const P = $('#vidPlayer'), G = $('#vidGrid');
   function show(i, auto){
     const v = list[i];
@@ -3736,10 +3804,10 @@ function openVideos(){
     G.querySelectorAll('.vcard').forEach(c => c.onclick = () => { sfx.tick(); show(+c.dataset.i, true); });
     show(0, false);
   }
-  $('#videos').hidden = false;
 }
 function closeVideos(){
-  $('#vidPlayer').innerHTML = ''; $('#videos').hidden = true;   // quitar el iframe detiene el video
+  try{ ytPlayer && ytPlayer.destroy(); }catch(e){} ytPlayer = null;
+  $('#vidPlayer').innerHTML = ''; $('#vidGrid').innerHTML = ''; $('#videos').hidden = true;   // quitar el reproductor detiene el video
   if (!$('#cover').hidden){ menuVid.play().catch(()=>{}); fx.ambient(menuAmbient); }
 }
 $('#vidBtn').onclick = () => { const [x,y] = fx.at($('#vidBtn')); fx.burst(x, y, {count:30, colors:['#FF4E45','#fff','#FFE27A'], shape:['star','glow','confetti'], size:12, speed:9, twinkle:1}); sfx.yes(); setTimeout(openVideos, 300); };
