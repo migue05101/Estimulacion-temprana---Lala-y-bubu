@@ -3757,23 +3757,31 @@ function openChannel(){
   let gave = false;
   const fallback = () => { if (gave || $('#videos').hidden) return; gave = true; try{ ytPlayer && ytPlayer.destroy(); }catch(e){} ytPlayer = null;
     openManual([{list:'UU' + CHANNEL_ID.slice(2), t:'Todos los videos'}, ...CHANNEL_VIDEOS]); };
-  const failT = setTimeout(fallback, 12000);
+  // solo se vuelve al cuadro único si el reproductor de YouTube no carga; la lista se sigue buscando
+  const failT = setTimeout(() => { if (!ytPlayer) fallback(); }, 15000);
+  let hasGrid = false;
+  const grab = () => {
+    if (gave || !ytPlayer || hasGrid) return false;
+    let ids = null; try{ ids = ytPlayer.getPlaylist(); }catch(e){}
+    if (ids && ids.length){ hasGrid = true; renderGrid(ids); return true; }
+    return false;
+  };
   loadYT().then(YT => {
     if ($('#videos').hidden || gave) return;
+    clearTimeout(failT);
     let tries = 0;
     ytPlayer = new YT.Player('ytPlayer', { width:'100%', height:'100%',
       playerVars:{ listType:'playlist', list:'UU' + CHANNEL_ID.slice(2), rel:0, playsinline:1, modestbranding:1 },
       events:{
         onReady: () => {
-          const grab = () => {
-            if (gave || !ytPlayer) return;
-            const ids = ytPlayer.getPlaylist && ytPlayer.getPlaylist();
-            if (ids && ids.length){ clearTimeout(failT); renderGrid(ids); return; }
-            if (++tries < 15) setTimeout(grab, 600); else { clearTimeout(failT); fallback(); }
-          };
-          grab();
+          // pedir la lista explícitamente: así YouTube entrega los videos sin tener que darle play
+          try{ ytPlayer.cuePlaylist({listType:'playlist', list:'UU' + CHANNEL_ID.slice(2), index:0}); }catch(e){}
+          const poll = () => { if (grab() || gave || !ytPlayer) return;
+            if (++tries === 10 && !hasGrid) G.innerHTML = `<p class="vids-wait">Toca ▶ en el video y aquí aparecerá la lista para elegir 🐻</p>`;
+            if (tries < 60) setTimeout(poll, 500); };
+          poll();
         },
-        onStateChange: () => { try{ const i = ytPlayer.getPlaylistIndex(); G.querySelectorAll('.vcard').forEach((c,k) => c.classList.toggle('on', k === i)); }catch(e){} }
+        onStateChange: () => { grab(); try{ const i = ytPlayer.getPlaylistIndex(); G.querySelectorAll('.vcard').forEach((c,k) => c.classList.toggle('on', k === i)); }catch(e){} }
       } });
   }).catch(() => { clearTimeout(failT); fallback(); });
   function renderGrid(ids){
