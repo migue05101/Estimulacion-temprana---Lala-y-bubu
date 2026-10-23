@@ -1722,7 +1722,7 @@ function startFamilia(){
       if (locked) return; const o = opts[+b.dataset.i];
       if (o === target){ locked = true; b.classList.add('yes'); sfx.yes();
         { const [x,y]=fx.at(b); fx.burst(x,y,{count:22,colors:['#E66FA3','#F27BB0','#FF9AC4'],shape:'heart',size:16,speed:7,gravity:-.04,life:70}); fx.burst(x,y,{count:14,shape:'star',size:9,speed:6,twinkle:1}); } say(`¡Sí! ¡Es ${o.name}! ¡Hola, ${o.name}!`); round++; setTimeout(next,1800); }
-      else { b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); sfx.soft(); say(`Ese es ${o.name}. ¿Dónde está ${target.name}?`); }
+      else { b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); sfx.soft(); say(`Aquí está ${o.name}. ¿Dónde está ${target.name}?`); }
     });
   }
   next();
@@ -1850,8 +1850,9 @@ function startQueFalta(){
     const items = shuffle(THINGS).slice(0, n), hideI = Math.random()*n|0, hidden = items[hideI];
     play.innerHTML = dotsHTML(ROUNDS, round) + `<div class="shelf-wrap"><div class="shelf">${items.map(t=>`<span class="it">${t.e}</span>`).join('')}</div><div class="blanket" style="background:${SK().falta.bg}">${starSVG}</div></div><div class="opts" hidden></div>`;
     const its = [...play.querySelectorAll('.shelf .it')];
-    ask('¡Mira bien! ' + items.map(t => t.n).join(', ') + '.');
-    its.forEach((el,i) => bag.later(() => { el.classList.add('bounce'); sfx.tick(); }, 700 + i*800));
+    ask('¡Mira bien!');
+    // cada objeto se nombra cuando salta (frases cortas, fáciles de grabar con la voz del personaje)
+    its.forEach((el,i) => bag.later(() => { el.classList.add('bounce'); sfx.tick(); say(cap(items[i].n) + '.'); }, 1200 + i*900));
     const showT = 1800 + n*900;
     bag.later(() => { play.querySelector('.blanket').classList.add('down'); say(SK().falta.txt); }, showT);
     bag.later(() => {
@@ -2076,7 +2077,7 @@ function startTamanos(){
     play.innerHTML = dotsHTML(ROUNDS, round) + `<div class="nests" style="flex:1;align-items:center">${shuffle(keys).map(target).join('')}</div>
       <div class="tray" style="margin-bottom:6px">${shuffle(keys).map(s=>`<span class="egg" data-s="${s}" style="font-size:${base*SZ[s]*.6}px">${T.it}</span>`).join('')}</div>`;
     const tnameBig = `${T.tgg} ${T.tn} ${adj('grande',T.tgg)}`, itBig = `${T.itg} ${T.itn} ${adj('grande',T.itg)}`;
-    ask(keys.length === 2 ? `Lleva ${itBig} a ${tnameBig}, y ${T.itg} ${adj('pequeño',T.itg)} a ${T.tgg} ${adj('pequeño',T.tgg)}.`.replace(' a el ',' al ') : `¡Ahora hay uno mediano! Lleva cada ${T.itn} a su ${T.tn}.`);
+    ask(keys.length === 2 ? `Lleva ${itBig} a ${tnameBig}, y ${T.itg} ${T.itn} ${adj('pequeño',T.itg)} a ${T.tgg} ${T.tn} ${adj('pequeño',T.tgg)}.`.split(' a el ').join(' al ') : `¡Ahora hay uno mediano! Lleva cada ${T.itn} a su ${T.tn}.`);
     let placed = 0;
     play.querySelectorAll('.egg').forEach(it => dragKit(it, {
       targets: () => [...play.querySelectorAll('.szt')].filter(n => !n.dataset.full),
@@ -2090,7 +2091,7 @@ function startTamanos(){
           bag.later(() => round >= ROUNDS ? celebrate('tamanos', '¡Sabes qué es grande y qué es pequeño!', () => { round = 0; next(); }) : next(), 2000);
         }, 700);
       },
-      onFail: () => say(`Ese es ${adj(it.dataset.s, T.itg)}. Llévalo a ${T.tgg === 'el' ? 'el' : 'la'} ${T.tn} ${adj(it.dataset.s, T.tgg)}.`.replace(' a el ',' al '))
+      onFail: () => say(`${T.itg === 'la' ? 'Esa' : 'Ese'} es ${adj(it.dataset.s, T.itg)}. ${T.itg === 'la' ? 'Llévala' : 'Llévalo'} a ${T.tgg === 'el' ? 'el' : 'la'} ${T.tn} ${adj(it.dataset.s, T.tgg)}.`.replace(' a el ',' al '))
     }));
   }
   next();
@@ -2389,7 +2390,7 @@ function startRompecabezas(){
     const cells = []; for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) cells.push({r, c, i: r*cols+c});
     play.innerHTML = `<div class="pz-board" style="width:${W}px;height:${H}px;grid-template-columns:repeat(${cols},1fr)"><div class="pz-ghost" style="background-image:url(${P.src})"></div>${cells.map(x=>`<div class="pz-cell drop" data-i="${x.i}"></div>`).join('')}</div>
       <div class="tray">${shuffle(cells).map(x=>`<span class="pz-piece" data-i="${x.i}" style="width:${cw*k}px;height:${ch*k}px;background-image:url(${P.src});background-size:${W*k}px ${H*k}px;background-position:${-x.c*cw*k}px ${-x.r*ch*k}px" data-full="${W}px ${H}px|${-x.c*cw}px ${-x.r*ch}px"></span>`).join('')}</div>`;
-    ask(cells.length === 2 ? '¡Arma el rompecabezas! Lleva cada pieza a su lugar.' : `¡Ahora con ${cells.length} piezas!`);
+    ask(cells.length === 2 ? '¡Arma el rompecabezas! Lleva cada pieza a su lugar.' : `¡Ahora con ${NUM_WORDS[cells.length]} piezas!`);
     let placed = 0;
     play.querySelectorAll('.pz-piece').forEach(p => dragKit(p, {
       targets: () => [...play.querySelectorAll('.pz-cell')].filter(c => !c.dataset.full),
@@ -2973,7 +2974,7 @@ function startCuantos(){
     play.querySelectorAll('.cf').forEach(b => b.onclick = () => { if (b.classList.contains('on')) return; b.classList.add('on'); c++; b.dataset.k = c; tone([440+c*90],.1,'triangle',.1); say(cap(NUM_WORDS[c])); });
     play.querySelectorAll('.numopt').forEach(b => b.onclick = () => {
       if (locked) return; const x = +b.dataset.n;
-      if (x === n){ locked = true; round++; sfx.yes(); burstAt(b); say(`¡Sí! ¡${cap(NUM_WORDS[n])} ${n === 1 ? t.n : t.p}!`);
+      if (x === n){ locked = true; round++; sfx.yes(); burstAt(b); say(`¡Sí! ¡${n === 1 ? (t.g === 'la' ? 'Una' : 'Un') : cap(NUM_WORDS[n])} ${n === 1 ? t.n : t.p}!`);
         roundsDone(bag, 'cuantos', round, ROUNDS, '¡Qué bien cuentas!', () => { round = 0; next(); }, next, 2000);
       } else {
         wiggle(b); locked = true; say('Contemos juntos.');
@@ -3337,7 +3338,7 @@ function startOrdenar(){
 /* ---------- 40. ¿QUÉ ME PONGO? (el clima y vestirse) ---------- */
 const WEATHER = [
   {k:'sol', e:'☀️', bg:'linear-gradient(#FFE58A,#FFF6D6)', say:'Hace mucho sol y calor.', ok:[{e:'🩳',n:'pantaloneta'},{e:'👒',n:'sombrero'},{e:'🕶️',n:'gafas de sol'}]},
-  {k:'lluvia', e:'🌧️', bg:'linear-gradient(#9FB6CF,#DCE7F2)', say:'Está lloviendo.', ok:[{e:'☂️',n:'sombrilla'},{e:'🥾',n:'botas'},{e:'🧥',n:'impermeable'}]},
+  {k:'lluvia', e:'🌧️', bg:'linear-gradient(#9FB6CF,#DCE7F2)', say:'Está lloviendo.', ok:[{e:'☂️',n:'sombrilla'},{e:'🥾',n:'botas'}]},
   {k:'frio', e:'❄️', bg:'linear-gradient(#CFE8FF,#F4FAFF)', say:'Hace mucho frío.', ok:[{e:'🧣',n:'bufanda'},{e:'🧤',n:'guantes'},{e:'🧥',n:'chaqueta'}]}
 ];
 function startClima(){
