@@ -3749,49 +3749,97 @@ function openVideos(){
   $('#videos').hidden = false;
   if (CHANNEL_ID) openChannel(); else openManual(CHANNEL_VIDEOS);
 }
+// Lista de videos del canal: se lee el feed público del canal (últimos videos, con títulos) a través de
+// un puente público (el navegador no puede leer YouTube directo), y se va guardando en el teléfono
+// para que la lista crezca con el tiempo. Los Shorts se dejan por fuera.
+const FEED_PROXIES = [
+  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
+  u => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`
+];
+async function fetchFeed(){
+  const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+  for (const px of FEED_PROXIES){
+    try{
+      const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 7000);
+      const r = await fetch(px(url), {signal: ctl.signal}); clearTimeout(t);
+      if (!r.ok) continue;
+      const xml = new DOMParser().parseFromString(await r.text(), 'text/xml');
+      const out = [...xml.getElementsByTagName('entry')].map(e => {
+        const id = (e.getElementsByTagName('yt:videoId')[0] || e.getElementsByTagNameNS('*','videoId')[0] || {}).textContent;
+        const t = (e.getElementsByTagName('title')[0] || {}).textContent || '';
+        const link = (e.getElementsByTagName('link')[0] || {getAttribute:()=>''}).getAttribute('href') || '';
+        const pub = (e.getElementsByTagName('published')[0] || {}).textContent || '';
+        return {id, t, pub, short: /\/shorts\//.test(link)};
+      }).filter(v => v.id);
+      if (out.length) return out;
+    }catch(e){}
+  }
+  return null;
+}
+function savedList(){ try{ return JSON.parse(localStorage.getItem('ytList') || '[]'); }catch(e){ return []; } }
+function mergeList(fresh){
+  const map = new Map(savedList().map(v => [v.id, v]));
+  fresh.forEach(v => map.set(v.id, {...map.get(v.id), ...v}));
+  const all = [...map.values()].sort((a,b) => (b.pub || '').localeCompare(a.pub || ''));
+  try{ localStorage.setItem('ytList', JSON.stringify(all)); }catch(e){}
+  return all;
+}
 function openChannel(){
   const P = $('#vidPlayer'), G = $('#vidGrid'), body = $('#videos .vids-body');
   body.classList.remove('solo');
+  let list = [], current = -1;
+  const playlist = 'UULF' + CHANNEL_ID.slice(2);       // solo videos largos (sin Shorts)
+  const visible = l => { const long = l.filter(v => !v.short); return long.length ? long : l; };
+  function render(){
+    if (!list.length) return;
+    G.innerHTML = list.map((v,i) => `<button class="vcard ${i===current?'on':''}" data-i="${i}" data-id="${v.id}"><img src="${ytThumb(v.id)}" alt="" loading="lazy"><b>${v.t || ytTitles[v.id] || ''}</b></button>`).join('');
+    G.querySelectorAll('.vcard').forEach(c => c.onclick = () => play(+c.dataset.i));
+    fillTitles(list.filter(v => !v.t).map(v => v.id), G);
+  }
+  function play(i){
+    const v = list[i]; if (!v) return; current = i; sfx.tick();
+    G.querySelectorAll('.vcard').forEach((c,k) => c.classList.toggle('on', k === i));
+    if (ytPlayer && ytPlayer.loadVideoById){ try{ ytPlayer.loadVideoById(v.id); }catch(e){ embed(v.id); } }
+    else embed(v.id);
+    if (innerWidth < innerHeight) P.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  const embed = id => { P.innerHTML = `<iframe src="${ytEmbed({id}, true)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`; ytPlayer = null; };
+  // 1) lo guardado en el teléfono aparece de inmediato
+  const saved = visible(savedList());
+  if (saved.length){ list = saved; render(); } else G.innerHTML = `<p class="vids-wait">Cargando los videos… 🐻</p>`;
+  // 2) feed del canal (actualiza y agrega los nuevos)
+  fetchFeed().then(fresh => {
+    if ($('#videos').hidden) return;
+    if (fresh){ list = visible(mergeList(fresh)); render(); return; }
+    if (!list.length) tryPlayerList();
+  });
+  // 3) reproductor oficial (cuenta las vistas); arranca con la lista de videos largos del canal
   P.innerHTML = `<div id="ytPlayer"></div>`;
-  G.innerHTML = `<p class="vids-wait">Cargando los videos… 🐻</p>`;
-  let gave = false;
-  const fallback = () => { if (gave || $('#videos').hidden) return; gave = true; try{ ytPlayer && ytPlayer.destroy(); }catch(e){} ytPlayer = null;
-    openManual([{list:'UU' + CHANNEL_ID.slice(2), t:'Todos los videos'}, ...CHANNEL_VIDEOS]); };
-  // solo se vuelve al cuadro único si el reproductor de YouTube no carga; la lista se sigue buscando
-  const failT = setTimeout(() => { if (!ytPlayer) fallback(); }, 15000);
-  let hasGrid = false;
-  const grab = () => {
-    if (gave || !ytPlayer || hasGrid) return false;
-    let ids = null; try{ ids = ytPlayer.getPlaylist(); }catch(e){}
-    if (ids && ids.length){ hasGrid = true; renderGrid(ids); return true; }
-    return false;
-  };
   loadYT().then(YT => {
-    if ($('#videos').hidden || gave) return;
-    clearTimeout(failT);
-    let tries = 0;
+    if ($('#videos').hidden || !$('#ytPlayer')) return;
     ytPlayer = new YT.Player('ytPlayer', { width:'100%', height:'100%',
-      playerVars:{ listType:'playlist', list:'UU' + CHANNEL_ID.slice(2), rel:0, playsinline:1, modestbranding:1 },
-      events:{
-        onReady: () => {
-          // pedir la lista explícitamente: así YouTube entrega los videos sin tener que darle play
-          try{ ytPlayer.cuePlaylist({listType:'playlist', list:'UU' + CHANNEL_ID.slice(2), index:0}); }catch(e){}
-          const poll = () => { if (grab() || gave || !ytPlayer) return;
-            if (++tries === 10 && !hasGrid) G.innerHTML = `<p class="vids-wait">Toca ▶ en el video y aquí aparecerá la lista para elegir 🐻</p>`;
-            if (tries < 60) setTimeout(poll, 500); };
-          poll();
-        },
-        onStateChange: () => { grab(); try{ const i = ytPlayer.getPlaylistIndex(); G.querySelectorAll('.vcard').forEach((c,k) => c.classList.toggle('on', k === i)); }catch(e){} }
-      } });
-  }).catch(() => { clearTimeout(failT); fallback(); });
-  function renderGrid(ids){
-    G.innerHTML = ids.map((id,i) => `<button class="vcard" data-i="${i}" data-id="${id}"><img src="${ytThumb(id)}" alt="" loading="lazy"><b>${ytTitles[id] || ''}</b></button>`).join('');
-    G.querySelectorAll('.vcard').forEach(c => c.onclick = () => {
-      sfx.tick(); G.querySelectorAll('.vcard').forEach(x => x.classList.toggle('on', x === c));
-      try{ ytPlayer.playVideoAt(+c.dataset.i); }catch(e){}
-      if (innerWidth < innerHeight) P.scrollIntoView({behavior:'smooth', block:'start'});
-    });
-    fillTitles(ids, G);
+      playerVars:{ listType:'playlist', list:playlist, rel:0, playsinline:1, modestbranding:1 },
+      events:{ onReady: () => { try{ ytPlayer.cuePlaylist({listType:'playlist', list:playlist, index:0}); }catch(e){} },
+               onStateChange: () => { if (!list.length) tryPlayerList(true); } } });
+  }).catch(() => {
+    if ($('#videos').hidden) return;
+    P.innerHTML = `<div class="vposter"><img src="logo.webp" alt="Lala y Bubu"></div><button class="big-play" aria-label="Ver los videos"><svg viewBox="0 0 24 24"><path fill="#fff" d="M8 5.5v13l10.5-6.5z"/></svg></button><div class="vt">Todos los videos</div>`;
+    P.querySelector('.big-play').onclick = () => { sfx.yes(); P.innerHTML = `<iframe src="${ytEmbed({list:playlist}, true)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`; };
+  });
+  // último recurso para la lista: la que entrega el reproductor
+  let polling = false;
+  function tryPlayerList(once){
+    if (polling && !once) return; polling = true; let n = 0;
+    const poll = () => {
+      if ($('#videos').hidden || list.length) return;
+      let ids = null; try{ ids = ytPlayer && ytPlayer.getPlaylist(); }catch(e){}
+      if (ids && ids.length){ list = ids.map(id => ({id, t: ytTitles[id] || ''})); render(); return; }
+      if (once) return;
+      if (++n === 8) G.innerHTML = `<p class="vids-wait">Toca ▶ en el video y aquí aparecerá la lista 🐻</p>`;
+      if (n < 60) setTimeout(poll, 500);
+    };
+    poll();
   }
 }
 function openManual(list){
