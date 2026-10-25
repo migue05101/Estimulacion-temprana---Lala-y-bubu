@@ -852,6 +852,21 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
 .skip{position:absolute;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);background:rgba(43,50,71,.6);color:#fff;font-weight:700;font-size:14px;border-radius:999px;padding:10px 18px;backdrop-filter:blur(6px)}
 @media (max-height:520px){.tagline{display:none}.logo{max-height:38vh}}
 .fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+/* personaje que habla: aparece grande desde abajo, con su globo de texto arriba */
+.talker{position:fixed;inset:0;z-index:72;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;overflow:hidden}
+.talker[hidden]{display:none}
+.talk-dim{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 90%,rgba(255,236,190,.45),rgba(40,20,60,.55) 75%);opacity:0;transition:opacity .35s}
+.talker.on .talk-dim{opacity:1}
+.talk-stage{position:relative;height:min(74vh,640px);max-width:96vw;aspect-ratio:var(--tar,.8);transform:translateY(110%);transition:transform .55s cubic-bezier(.3,1.35,.5,1);margin-bottom:calc(env(safe-area-inset-bottom,0px) - 1vh)}
+.talker.on .talk-stage{transform:none}
+.talker.out .talk-stage{transform:translateY(110%);transition:transform .35s ease-in}
+.talker.out .talk-dim{opacity:0}
+#talkCv{width:100%;height:100%;display:block;filter:drop-shadow(0 12px 18px rgba(0,0,0,.35))}
+.talk-bubble{position:absolute;top:calc(env(safe-area-inset-top,0px) + 4vh);left:50%;transform:translate(-50%,-20px) scale(.9);width:min(84vw,560px);padding:14px 22px;border-radius:26px;background:#fff;
+  font-family:var(--f-display);font-weight:800;font-size:clamp(18px,4.6vw,28px);line-height:1.2;text-align:center;color:var(--ink);box-shadow:0 6px 0 rgba(0,0,0,.12),0 12px 30px rgba(0,0,0,.25);opacity:0;transition:opacity .3s .25s,transform .4s .25s cubic-bezier(.3,1.5,.5,1)}
+.talker.on .talk-bubble{opacity:1;transform:translate(-50%,0) scale(1)}
+.talker.out .talk-bubble{opacity:0;transition:opacity .2s}
+@media (orientation:landscape){.talk-stage{height:min(76vh,640px)}.talk-bubble{top:calc(env(safe-area-inset-top,0px) + 2.5vh);width:min(70vw,640px);font-size:clamp(16px,2.6vw,26px);padding:10px 22px}}
 
 /* panel de papás */
 .panel{position:fixed;inset:0;z-index:60;background:rgba(43,50,71,.45);display:flex;justify-content:center;align-items:flex-end}
@@ -910,6 +925,14 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
   </div>
 </div>
 <canvas class="fx" id="fx" aria-hidden="true"></canvas>
+
+<!-- PERSONAJE QUE HABLA (videos de Flow con el fondo quitado) -->
+<div class="talker" id="talker" hidden>
+  <div class="talk-dim"></div>
+  <div class="talk-bubble" id="talkBubble"></div>
+  <div class="talk-stage" id="talkStage"><canvas id="talkCv"></canvas></div>
+  <video id="talkVid" muted playsinline preload="auto" style="display:none"></video>
+</div>
 
 <!-- VIDEOS DEL CANAL (YouTube) -->
 <section class="vids" id="videos" hidden>
@@ -1137,6 +1160,93 @@ function tone(freqs, dur=.14, type='sine', vol=.18){
 }
 const sfx = { yes:()=>tone([660,880,1320],.12,'triangle'), soft:()=>tone([330,262],.16,'sine',.12), tick:()=>tone([990],.05,'sine',.06), win:()=>tone([523,659,784,1047,1319],.13,'triangle',.2) };
 
+/* ---------- voces grabadas (videos de Flow) ----------
+   Cada personaje tiene videos con el fondo quitado: video "lado a lado" (color | transparencia) sin sonido + su audio aparte.
+   El audio va por Web Audio, que queda habilitado con el primer toque, así suena aunque el video arranque solo. */
+const VOICE = {
+  lala:{ saludo:'voz/lala_001' }
+};
+const talk = (() => {
+  const box = () => $('#talker'), vid = () => $('#talkVid'), cv = () => $('#talkCv');
+  const buffers = {}; let gl = null, prog = null, tex = null, ctx2 = null, off = null, raf = 0, srcNode = null, finish = null;
+  function initGL(c){
+    try{
+      gl = c.getContext('webgl', {premultipliedAlpha:true, alpha:true}); if (!gl) return false;
+      const sh = (t, src) => { const x = gl.createShader(t); gl.shaderSource(x, src); gl.compileShader(x); return x; };
+      prog = gl.createProgram();
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 v;void main(){v=(p+1.)*.5;v.y=1.-v.y;gl_Position=vec4(p,0.,1.);}'));
+      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, 'precision mediump float;varying vec2 v;uniform sampler2D t;void main(){vec3 c=texture2D(t,vec2(v.x*.5,v.y)).rgb;float a=texture2D(t,vec2(.5+v.x*.5,v.y)).r;a=smoothstep(.08,.92,a);gl_FragColor=vec4(c*a,a);}'));
+      gl.linkProgram(prog); gl.useProgram(prog);
+      const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+      [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(k => gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE));
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      return true;
+    }catch(e){ gl = null; return false; }
+  }
+  function draw(){
+    const v = vid(), c = cv();
+    if (v.readyState >= 2){
+      if (gl){ gl.viewport(0, 0, c.width, c.height); gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, v); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); }
+      else { // sin WebGL: mezcla en 2D
+        const w = c.width, h = c.height; off.drawImage(v, 0, 0, w*2, h);
+        const d = off.getImageData(0, 0, w*2, h).data, o = ctx2.createImageData(w, h), od = o.data;
+        for (let y = 0; y < h; y++) for (let x = 0; x < w; x++){ const i = (y*w*2 + x)*4, j = (y*w + x)*4, a = d[(y*w*2 + x + w)*4];
+          od[j] = d[i]; od[j+1] = d[i+1]; od[j+2] = d[i+2]; od[j+3] = a; }
+        ctx2.putImageData(o, 0, 0);
+      }
+    }
+    raf = requestAnimationFrame(draw);
+  }
+  async function audio(src){
+    if (buffers[src]) return buffers[src];
+    ac = ac || new (window.AudioContext||window.webkitAudioContext)();
+    const r = await fetch(src + '.mp3'); const b = await r.arrayBuffer();
+    return buffers[src] = await new Promise((res, rej) => ac.decodeAudioData(b, res, rej));
+  }
+  function stop(){
+    cancelAnimationFrame(raf); try{ srcNode && srcNode.stop(); }catch(e){} srcNode = null;
+    const v = vid(); v.pause();
+    const b = box(); b.classList.add('out');
+    setTimeout(() => { b.hidden = true; b.classList.remove('on','out'); }, 380);
+    const f = finish; finish = null; if (f) f();
+  }
+  function play(src, text){
+    return new Promise(async (resolve, reject) => {
+      if (finish) stop();
+      const b = box(), v = vid(), c = cv();
+      try{ speechSynthesis.cancel(); }catch(e){}
+      let buf = null;
+      try{ buf = await audio(src); }catch(e){ return reject(e); }
+      v.src = src + '.mp4'; v.muted = true; v.load();
+      const ready = await new Promise(r => { const t = setTimeout(() => r(false), 4000); v.oncanplay = () => { clearTimeout(t); r(true); }; v.onerror = () => { clearTimeout(t); r(false); }; });
+      if (!ready) return reject(new Error('video'));
+      const w = v.videoWidth/2, h = v.videoHeight;
+      c.width = w; c.height = h; b.style.setProperty('--tar', (w/h).toFixed(3));
+      if (!gl && !ctx2){ if (!initGL(c)){ ctx2 = c.getContext('2d'); const oc = document.createElement('canvas'); oc.width = w*2; oc.height = h; off = oc.getContext('2d', {willReadFrequently:true}); } }
+      $('#talkBubble').textContent = text || '';
+      if (bubbleEl && text) bubbleEl.textContent = text;
+      b.hidden = false; void b.offsetWidth; b.classList.add('on');
+      finish = resolve;
+      try{ await v.play(); }catch(e){}
+      try{ if (ac.state === 'suspended') await ac.resume(); srcNode = ac.createBufferSource(); srcNode.buffer = buf; srcNode.connect(ac.destination); srcNode.start(); }catch(e){}
+      draw();
+      v.onended = () => setTimeout(stop, 250);
+    });
+  }
+  document.addEventListener('click', e => { if (finish && e.target.closest('#talker')) stop(); });
+  const prefetch = (id, key) => { const s = VOICE[id] && VOICE[id][key]; if (s){ audio(s).catch(()=>{}); const l = document.createElement('link'); l.rel = 'preload'; l.as = 'video'; l.href = s + '.mp4'; document.head.appendChild(l); } };
+  return { play, stop, prefetch, has: (id, key) => !!(VOICE[id] && VOICE[id][key]) };
+})();
+// dice una frase con el video del personaje si existe; si no, con la voz del teléfono
+function speakClip(key, text){
+  const id = THEME_IDS[THI], src = VOICE[id] && VOICE[id][key];
+  if (!src){ say(text); return Promise.resolve(); }
+  return talk.play(src, text).catch(() => say(text));
+}
+
 /* ---------- motor de partículas ---------- */
 const fx = (() => {
   const cv = document.getElementById('fx'), ctx = cv.getContext('2d');
@@ -1274,7 +1384,7 @@ const CAT_ORDER = ['Aprendo','Cuerpo y emociones','Memoria y atención','Lógica
 
 /* ---------- los cuatro mundos: misma base de actividades, distinta apariencia y contenido ---------- */
 const THEMES = {
-  lala:{ name:'Lala', world:'El jardín de Lala', greet:'¡Hola! Soy Lala. ¡Vamos a jugar en mi jardín!',
+  lala:{ name:'Lala', world:'El jardín de Lala', greet:'¡Hola! Soy Lala. ¡Vamos a jugar en mi jardín! Elige un juego. ¡Juguemos juntos!',
     main:'#E85A9B', dark:'#9E2A5E', bg:'linear-gradient(#FFE3F0,#FFF4C9 55%,#C9EFA8)', frameA:'#FFB3D1', frameB:'#F07AAE', corner:'#FFD84A',
     motif:['🌸','🦋','🌼','🐝','🌷'], cards:['#E85A9B','#F59A23','#9B59D6','#3BAA4C','#E0A400','#EF5B4C'],
     pool:[{e:'🌸',n:'flor',p:'flores',g:'la'},{e:'🦋',n:'mariposa',p:'mariposas',g:'la'},{e:'🐝',n:'abeja',p:'abejas',g:'la'},{e:'🐞',n:'mariquita',p:'mariquitas',g:'la'},
@@ -1282,7 +1392,7 @@ const THEMES = {
       {e:'🐦',n:'pajarito',p:'pajaritos',g:'el'},{e:'🐛',n:'gusanito',p:'gusanitos',g:'el'},{e:'🍄',n:'hongo',p:'hongos',g:'el'},{e:'🌈',n:'arcoíris',p:'arcoíris',g:'el'}],
     riders:['🐝','🦋','🐞','🐌','🐦','🐛','🐰','🐱'],
     titles:{colores:'Flores de colores', dientes:'Dientes del hipopótamo', comida:'Comida del conejito', vasitos:'Macetas escondidas', patitos:'Mariposas y flores', respira:'Respira con la flor', cocina:'Galletas con Lala', numeros:'Números del jardín', memoria:'Parejas de flores', quefalta:'¿Qué falta en el jardín?', burbujas:'Burbujas del jardín', sombras:'Sombras del jardín', pintar:'Pinta con Lala', xilofono:'Música con Lala', bus:'El bus del jardín'} },
-  juan:{ name:'Juan', world:'La aventura de Juan', greet:'¡Hola! Soy Juan. ¡Vamos de aventura con los dinosaurios!',
+  juan:{ name:'Juan', world:'La aventura de Juan', greet:'¡Hola! Soy Juan. ¡Vamos de aventura! Elige un juego. ¡Juguemos juntos!',
     main:'#F07A1A', dark:'#8A3D05', bg:'linear-gradient(#BFE9FF,#E9F7D2 55%,#9CD67A)', frameA:'#8FCB5B', frameB:'#4E9A2E', corner:'#F59A23',
     motif:['🦖','🌴','🦕','🌋','🍃'], cards:['#F07A1A','#3BAA4C','#2F7DE1','#C0392B','#8E5B2B','#16A085'],
     pool:[{e:'🦖',n:'dinosaurio',p:'dinosaurios',g:'el'},{e:'🐊',n:'cocodrilo',p:'cocodrilos',g:'el'},{e:'🦁',n:'león',p:'leones',g:'el'},{e:'🐘',n:'elefante',p:'elefantes',g:'el'},
@@ -1290,7 +1400,7 @@ const THEMES = {
       {e:'✈️',n:'avión',p:'aviones',g:'el'},{e:'🚀',n:'cohete',p:'cohetes',g:'el'},{e:'⚽',n:'pelota',p:'pelotas',g:'la'},{e:'🐢',n:'tortuga',p:'tortugas',g:'la'}],
     riders:['🦖','🐊','🦁','🐘','🦒','🐒','🐢','🐯'],
     titles:{colores:'Mochilas de colores', dientes:'Dientes del dino', comida:'Comida del dino', vasitos:'Cofres del tesoro', patitos:'Carritos al garaje', cocina:'Panqueques de Juan', numeros:'Números de dinos', memoria:'Parejas de dinos', quefalta:'¿Qué falta en la selva?', burbujas:'Burbujas de aventura', sombras:'Sombras de la selva', bus:'El bus de la selva', bomberos:'Juan bombero', pintar:'Pinta con Juan', xilofono:'Música con Juan'} },
-  lucia:{ name:'Lucía', world:'El cielo de Lucía', greet:'¡Hola! Soy Lucía. ¡Vamos a jugar entre las nubes y las estrellas!',
+  lucia:{ name:'Lucía', world:'El cielo de Lucía', greet:'¡Hola! Soy Lucía. ¡Vamos a jugar en el cielo! Elige un juego. ¡Juguemos juntos!',
     main:'#8A5BE0', dark:'#4B2A8C', bg:'linear-gradient(#CFE4FF,#EBDDFF 60%,#FFE3F5)', frameA:'#C9B3FF', frameB:'#8F6AE6', corner:'#FFD84A',
     motif:['⭐','☁️','🌙','✨','🎈'], cards:['#8A5BE0','#2F7DE1','#E85A9B','#13A39A','#E09A00','#5B6CE0'],
     pool:[{e:'⭐',n:'estrella',p:'estrellas',g:'la'},{e:'🌙',n:'luna',p:'lunas',g:'la'},{e:'☁️',n:'nube',p:'nubes',g:'la'},{e:'🌈',n:'arcoíris',p:'arcoíris',g:'el'},
@@ -1298,7 +1408,7 @@ const THEMES = {
       {e:'🐱',n:'gatito',p:'gatitos',g:'el'},{e:'🍰',n:'pastel',p:'pasteles',g:'el'},{e:'🧁',n:'cupcake',p:'cupcakes',g:'el'},{e:'🐑',n:'ovejita',p:'ovejitas',g:'la'}],
     riders:['🦄','🐱','🐑','🐶','🐰','🐼','🐥','🐨'],
     titles:{colores:'Estrellas de colores', dientes:'Dientes del unicornio', comida:'Comida del unicornio', vasitos:'Nubes mágicas', patitos:'Estrellitas a su nube', respira:'Respira con la nube', numeros:'Estrellas y números', memoria:'Parejas del cielo', quefalta:'¿Qué falta en el cielo?', burbujas:'Burbujas de estrellas', sombras:'Sombras del cielo', pintar:'Pinta con Lucía', xilofono:'Música con Lucía', cocina:'Pastelería de Lucía'} },
-  bubu:{ name:'Bubu', world:'El bosque mágico de Bubu', greet:'¡Hola! Soy Bubu. ¡Vamos a mi bosque mágico!',
+  bubu:{ name:'Bubu', world:'El bosque mágico de Bubu', greet:'¡Hola! Soy Bubu. ¡Vamos a mi bosque mágico! Elige un juego. ¡Juguemos juntos!',
     main:'#2E8B4A', dark:'#174D28', bg:'linear-gradient(#D7F0C4,#F7EBC6 60%,#E9C48C)', frameA:'#C98F55', frameB:'#8A5A2B', corner:'#FFC93C',
     motif:['🌲','🍄','⭐','🍂','🌰'], cards:['#2E8B4A','#B5651D','#D99A00','#3C7FBF','#7A4FB5','#C0392B'],
     pool:[{e:'🐻',n:'oso',p:'osos',g:'el'},{e:'🐿️',n:'ardilla',p:'ardillas',g:'la'},{e:'🦊',n:'zorro',p:'zorros',g:'el'},{e:'🦉',n:'búho',p:'búhos',g:'el'},
@@ -3662,7 +3772,7 @@ function choose(id){
   fx.burst(x, y, {count:22, colors:[T.main,'#FFF6C8'], shape:'heart', size:16, speed:8, gravity:.08, life:70});
   const [nx, ny] = fx.at(nm); fx.burst(nx, ny, {count:30, colors:fx.RAINBOW, shape:'confetti', size:11, speed:9, gravity:.2, life:70});
   tone([CH_NOTE[id], CH_NOTE[id]*1.25, CH_NOTE[id]*1.5, CH_NOTE[id]*2], .11, 'triangle', .14);
-  applyTheme(id); renderPortals();
+  applyTheme(id); renderPortals(); talk.prefetch(id, 'saludo');
   const enter = () => {
     fl.style.setProperty('--fx', (x/innerWidth*100)+'%'); fl.style.setProperty('--fy', (y/innerHeight*100)+'%');
     fl.classList.remove('on'); void fl.offsetWidth; fl.classList.add('on'); sfx.win();
@@ -3670,7 +3780,7 @@ function choose(id){
       $('#cover').classList.add('out'); fx.ambient(null);
       if (!sessionStart) sessionStart = Date.now();
       $('#home2').hidden = false; $('#home2').scrollTop = 0; if (!$('#w2Vid').hidden) $('#w2Vid').play().catch(()=>{});
-      say(T.greet);
+      speakClip('saludo', T.greet);
       setTimeout(() => { $('#cover').hidden = true; menuVid.pause(); if (sel){ sel.pause(); sel.classList.remove('on'); sel.currentTime = 0; } $('#pickStage').classList.remove('celebrating');
         hot.classList.remove('on'); nm.classList.remove('jump','big'); choosing = false; }, 650);
     }, 450);
