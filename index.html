@@ -857,7 +857,7 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
 .talker[hidden]{display:none}
 .talk-dim{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 90%,rgba(255,236,190,.45),rgba(40,20,60,.55) 75%);opacity:0;transition:opacity .35s}
 .talker.on .talk-dim{opacity:1}
-.talk-stage{position:relative;height:min(74vh,640px);max-width:96vw;aspect-ratio:var(--tar,.8);transform:translateY(110%);transition:transform .55s cubic-bezier(.3,1.35,.5,1);margin-bottom:calc(env(safe-area-inset-bottom,0px) - 1vh)}
+.talk-stage{position:relative;width:min(94vw,calc(min(70vh,640px) * var(--tar,.8)));aspect-ratio:var(--tar,.8);transform:translateY(110%);transition:transform .55s cubic-bezier(.3,1.35,.5,1);margin-bottom:calc(env(safe-area-inset-bottom,0px) - 1vh)}
 .talker.on .talk-stage{transform:none}
 .talker.out .talk-stage{transform:translateY(110%);transition:transform .35s ease-in}
 .talker.out .talk-dim{opacity:0}
@@ -866,7 +866,7 @@ h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.0
   font-family:var(--f-display);font-weight:800;font-size:clamp(18px,4.6vw,28px);line-height:1.2;text-align:center;color:var(--ink);box-shadow:0 6px 0 rgba(0,0,0,.12),0 12px 30px rgba(0,0,0,.25);opacity:0;transition:opacity .3s .25s,transform .4s .25s cubic-bezier(.3,1.5,.5,1)}
 .talker.on .talk-bubble{opacity:1;transform:translate(-50%,0) scale(1)}
 .talker.out .talk-bubble{opacity:0;transition:opacity .2s}
-@media (orientation:landscape){.talk-stage{height:min(76vh,640px)}.talk-bubble{top:calc(env(safe-area-inset-top,0px) + 2.5vh);width:min(70vw,640px);font-size:clamp(16px,2.6vw,26px);padding:10px 22px}}
+@media (orientation:landscape){.talk-stage{width:min(80vw,calc(min(74vh,640px) * var(--tar,.8)))}.talk-bubble{top:calc(env(safe-area-inset-top,0px) + 2.5vh);width:min(70vw,640px);font-size:clamp(16px,2.6vw,26px);padding:10px 22px}}
 
 /* panel de papás */
 .panel{position:fixed;inset:0;z-index:60;background:rgba(43,50,71,.45);display:flex;justify-content:center;align-items:flex-end}
@@ -1164,7 +1164,10 @@ const sfx = { yes:()=>tone([660,880,1320],.12,'triangle'), soft:()=>tone([330,26
    Cada personaje tiene videos con el fondo quitado: video "lado a lado" (color | transparencia) sin sonido + su audio aparte.
    El audio va por Web Audio, que queda habilitado con el primer toque, así suena aunque el video arranque solo. */
 const VOICE = {
-  lala:{ saludo:'voz/lala_001' }
+  lala:{ saludo:'voz/lala_001' },
+  juan:{ saludo:'voz/juan_001' },
+  lucia:{ saludo:'voz/lucia_001' },
+  bubu:{ saludo:'voz/bubu_001' }
 };
 const talk = (() => {
   const box = () => $('#talker'), vid = () => $('#talkVid'), cv = () => $('#talkCv');
